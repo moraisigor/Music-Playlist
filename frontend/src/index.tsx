@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import LoadingPage from './pages/loading/loading-page';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <LoadingPage />
   </React.StrictMode>,
   document.getElementById('root')
 );

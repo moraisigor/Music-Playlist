@@ -1,0 +1,22 @@
+.soundWave {
+    display: flex;
+    align-items: center;
+}
+
+.wave {
+    width: 10px;
+    border-radius: 80px;
+    background-color: #00EB84;
+}
+
+.smallWave {
+    height: 30px;
+}
+
+.mediumWave {
+    height: 50px;
+}
+
+.largeWave {
+    height: 70px;
+}
