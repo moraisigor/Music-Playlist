@@ -1,0 +1,93 @@
+.adminSignIn {
+    text-align: center;
+    background-color: #25344D;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.adminSignInBody {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 60px);
+}
+
+.appHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+.signInCard {
+    display: flex;
+    flex-direction: column;
+    padding: 50px 50px 50px 50px;
+    background-color: #E5E5E5;
+    border-radius: 10px;
+    min-width: 400px;
+    z-index: 999;
+}
+
+.signInCard h1 {
+    color: #25344D;
+}
+
+.signInCard a {
+    text-decoration: none;
+}
+
+.signInCard h4 {
+    font-weight: 500;
+    color: #25344D;
+    margin-top: 50px;
+}
+
+.formInput {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.formInput label {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.formInput input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    line-height: 32px;
+}
+
+.inputRemember {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.inputRemember input {
+    width: 20px;
+    height: 20px;    
+}
+
+#sendButton {
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: #CC9627;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    min-height: 44px;
+    color: #25344D;
+    font-weight: bold;
+}
+
+.formSignIn {
+    margin-top: 40px;
+}

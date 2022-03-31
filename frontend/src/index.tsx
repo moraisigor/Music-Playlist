@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import LoadingPage from './pages/loading/loading-page';
+import AdminSignInPage from './pages/sign-in/admin/admin-sign-in-page';
+import ClientsSignInPage from './pages/sign-in/clients/clients-sign-in-page';
 
 ReactDOM.render(
   <React.StrictMode>
-    <LoadingPage />
+    <ClientsSignInPage />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -6,7 +6,7 @@ function LoadingPage() {
   return (
     <div className="loadingPage">
         <TextualLogo fontSize={60}></TextualLogo>
-        <SoundWaveLogo></SoundWaveLogo>
+        <SoundWaveLogo dark={false}></SoundWaveLogo>
     </div>
   );
 }

@@ -1,12 +1,21 @@
 .soundWave {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .wave {
     width: 10px;
     border-radius: 80px;
-    background-color: #00EB84;
+    background-color: #7DAFFF;
+}
+
+.silverWave {
+    background-color: #E5E5E5;
+}
+
+.darkWave {
+    background-color: #25344D;
 }
 
 .smallWave {
