@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import AdminPlansListPage from './pages/admin-dashboard/plans/list/admin-plans-list-page';
+import AdminPlansEditPage from './pages/admin-dashboard/plans/edit/admin-plans-edit-page';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AdminPlansListPage />
+    <AdminPlansEditPage isNew={false} />
   </React.StrictMode>,
   document.getElementById('root')
 );

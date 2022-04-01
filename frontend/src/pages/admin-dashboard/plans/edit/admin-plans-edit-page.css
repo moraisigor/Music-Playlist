@@ -1,0 +1,146 @@
+.adminPlans {
+    text-align: center;
+    background-color: white;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.adminPlansBody {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    height: calc(100vh - 60px);
+}
+
+.adminPlansCard {
+    display: flex;
+    flex-direction: column;
+    background-color: #E5E5E5;
+    align-items: center;
+    justify-content: flex-start;
+    height: calc(100vh - 150px);
+    width: calc(100vw - 180px);
+    padding: 60px;
+    padding-bottom: 0px;
+}
+
+#adminPlansHeader button {
+    display: block;
+    width: 120px;
+    border: none;
+    background-color: #7DAFFF;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    min-height: 44px;
+    color: #25344D;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px #25344D;
+}
+
+#adminPlansHeader {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    color: #25344D;
+}
+
+.adminNavbar {
+    display: flex;
+    background-color: #25344D;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding-left: 30px;
+    padding-right: 60px;
+}
+
+.navbarMenu {
+    display: flex;
+}
+
+.navbarMenu > * {
+    margin-left: 40px;
+}
+
+.navbarMenu h4 {
+    color: #7DAFFF;
+    cursor: default;
+}
+
+.navbarMenu a {
+    text-decoration: none;
+}
+
+.navbarMenu a h4 {
+    color: #E5E5E5;
+    cursor: pointer;
+}
+
+.plansTable {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.plansTable thead {
+    background-color: #25344D;
+    color: #E5E5E5;
+    line-height: 40px;
+}
+
+.plansTable tbody {
+    background-color: white;
+    color: #25344D;
+    line-height: 40px;
+}
+
+.plansActionColumn {
+    width: 50px;
+    box-align: center;
+    padding: 5px;
+}
+
+.plansActionColumn > * {
+    margin-left: 5px;
+}
+
+.plansTable tfoot {
+    background-color: #25344D;
+    color: #E5E5E5;
+    line-height: 40px;
+}
+
+.pagination {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.paginationContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.paginationMenu {
+    list-style-type: none;
+}
+
+.paginationMenu li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid #25344D;
+}
+
+.currentPage {
+    cursor: default !important;
+    background-color: #7DAFFF !important;
+}
