@@ -2,13 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import LoadingPage from './pages/loading/loading-page';
-import AdminSignInPage from './pages/sign-in/admin/admin-sign-in-page';
-import ClientsSignInPage from './pages/sign-in/clients/clients-sign-in-page';
+import AdminPlansListPage from './pages/admin-dashboard/plans/list/admin-plans-list-page';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ClientsSignInPage />
+    <AdminPlansListPage />
   </React.StrictMode>,
   document.getElementById('root')
 );

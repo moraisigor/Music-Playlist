@@ -70,7 +70,13 @@ function AdminSignInPage() {
                     <label htmlFor='rememberMark'>Remember me</label>
                   </div>
 
-                  <a href='https://github.com/ugiete/Music-Playlist' target='_blank'><h4>by Leonardo Ugiete</h4></a>
+                  <a
+                    href='https://github.com/ugiete/Music-Playlist'
+                    target='_blank'
+                    rel="noreferrer"
+                  >
+                    <h4>by Leonardo Ugiete</h4>
+                  </a>
                 </div>
             </div>
         </div>

@@ -1,0 +1,46 @@
+.adminPlans {
+    text-align: center;
+    background-color: white;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.adminPlansBody {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 60px);
+}
+
+.adminNavbar {
+    display: flex;
+    background-color: #25344D;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding-left: 30px;
+    padding-right: 60px;
+}
+
+.navbarMenu {
+    display: flex;
+}
+
+.navbarMenu > * {
+    margin-left: 40px;
+}
+
+.navbarMenu h4 {
+    color: #7DAFFF;
+    cursor: default;
+}
+
+.navbarMenu a {
+    text-decoration: none;
+}
+
+.navbarMenu a h4 {
+    color: #E5E5E5;
+    cursor: pointer;
+}
