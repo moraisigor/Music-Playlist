@@ -15,7 +15,7 @@ function AdminPlansListPage() {
         new PlanModel('Basic', false),
     ];
 
-    function pageForward() {
+    function pageForward(): void {
         if (currentPage < lastPage) {
             if (pageOptions[pageOptions.length - 1] < lastPage) {
                 const options = pageOptions;
@@ -28,7 +28,7 @@ function AdminPlansListPage() {
         }
     }
     
-    function pageBackward() {
+    function pageBackward(): void {
         if (currentPage > 1) {
             if (pageOptions[0] > 1) {
                 const options = pageOptions;
@@ -41,12 +41,20 @@ function AdminPlansListPage() {
         }
     }
 
-    function selectPage(page: number) {
+    function selectPage(page: number): void {
         setCurrentPage(page);
     }
 
-    function deletePlan(plan: PlanModel) {
+    function deletePlan(plan: PlanModel): void {
         console.log(plan.getName());
+    }
+
+    function updatePage(plan: PlanModel): void {
+        console.log(plan.getName());
+    }
+
+    function createPage(): void {
+        console.log('new plan');
     }
 
     return (
@@ -63,7 +71,7 @@ function AdminPlansListPage() {
                 <div className="adminPlansCard">
                     <div id="adminPlansHeader">
                         <h1>List Plans</h1>
-                        <button>NEW +</button>
+                        <button type="button" onClick={createPage}>NEW +</button>
                     </div>
 
                     <table className="plansTable">
@@ -82,7 +90,7 @@ function AdminPlansListPage() {
                                     return (
                                         <tr>
                                             <td className="plansActionColumn">
-                                                <EditIconButton size={40} />
+                                                <EditIconButton size={40} onClick={() => updatePage(plan)} />
                                             </td>
                                             <td className="plansActionColumn">
                                                 <DeleteIconButton size={40} onClick={() => deletePlan(plan)}/>

@@ -2,7 +2,7 @@ import './delete-icon-button.css';
 
 interface ButtonProps {
     size: number,
-    onClick: () => any
+    onClick: () => void
 }
 
 function DeleteIconButton(props: ButtonProps) {
