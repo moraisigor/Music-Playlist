@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import AdminPlansListPage from './pages/admin-dashboard/plans/list/admin-plans-list-page';
-import AdminPlansEditPage from './pages/admin-dashboard/plans/edit/admin-plans-edit-page';
+import PlaylistMusic from './app/app';
+//import AdminPlansEditPage from './pages/admin-dashboard/plans/edit/admin-plans-edit-page';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AdminPlansEditPage isNew={false} />
+    <div>
+      <PlaylistMusic />
+    </div>
   </React.StrictMode>,
   document.getElementById('root')
 );

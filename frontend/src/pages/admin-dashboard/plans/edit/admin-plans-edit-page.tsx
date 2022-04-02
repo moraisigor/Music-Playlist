@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DeleteIconButton from "../../../../components/button/delete/delete-icon-button";
 import EditIconButton from "../../../../components/button/edit/edit-icon-button";
+import { AdminHeaderNav, AdminPageSelector } from "../../../../components/header/admin/admin-header";
 import TextualLogo from "../../../../components/logo/textual/logo-textual";
 import PlanModel from "../../../../models/plan";
 import './admin-plans-edit-page.css'
@@ -10,134 +12,70 @@ interface EditPlanProps {
 }
 
 function AdminPlansEditPage(props: EditPlanProps) {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [lastPage, setLastPage] = useState(10);
-    const [pageOptions, setPageOptions] = useState([1, 2, 3, 4, 5]);
+    const [loading, setLoading] = useState(false);
+    const [name, setName] = useState("");
+    const [musicLimit, setMusicLimit] = useState(0);
+    const [image, setImage] = useState("");
+    const navigate = useNavigate();
 
-    const plans: PlanModel[] = [
-        new PlanModel('Gold', true),
-        new PlanModel('Basic', false),
-    ];
+    function save() {
+        console.log(name);
+        console.log(musicLimit);
+        console.log(image);
+        navigate('/admin/plans', {replace: true});
+    }
 
-    function pageForward(): void {
-        if (currentPage < lastPage) {
-            if (pageOptions[pageOptions.length - 1] < lastPage) {
-                const options = pageOptions;
-                options.push(pageOptions[pageOptions.length - 1] + 1);
-                options.shift();
-                setPageOptions(options);
-            }
-            
-            setCurrentPage(currentPage + 1);
+    function uploadImage(event: React.ChangeEvent<HTMLInputElement>) {
+        if (event.target.files && event.target.files[0]) {
+            setImage(URL.createObjectURL(event.target.files[0]));
         }
     }
     
-    function pageBackward(): void {
-        if (currentPage > 1) {
-            if (pageOptions[0] > 1) {
-                const options = pageOptions;
-                options.unshift(pageOptions[0] - 1);
-                options.pop();
-                setPageOptions(options);
-            }
-
-            setCurrentPage(currentPage - 1);
-        }
-    }
-
-    function selectPage(page: number): void {
-        setCurrentPage(page);
-    }
-
-    function deletePlan(plan: PlanModel): void {
-        console.log(plan.getName());
-    }
-
-    function updatePage(plan: PlanModel): void {
-        console.log(plan.getName());
-    }
-
-    function createPage(): void {
-        console.log('new plan');
-    }
 
     return (
         <div className="adminPlans">
-            <header className='adminNavbar'>
-                <TextualLogo fontSize={28} />
-                <div className="navbarMenu">
-                    <a href="clients"><h4>Clients</h4></a>
-                    <a href="musics"><h4>Musics</h4></a>
-                    <h4>Plans</h4>
-                </div>
-            </header>
+            <AdminHeaderNav page={AdminPageSelector.PLANS} />
             <div className="adminPlansBody">
                 <div className="adminPlansCard">
                     <div id="adminPlansHeader">
-                        <h1> {props.isNew ? 'New' : 'Edit'} Plans</h1>
-                        <button type="button" onClick={createPage}>NEW +</button>
+                        <h1> {props.isNew ? 'New' : 'Edit'} Plan</h1>
+                        <button type="button" onClick={save}>
+                            { props.isNew ? 'SAVE' : 'UPDATE' }
+                        </button>
                     </div>
 
-                    <table className="plansTable">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th>Name</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div className="adminPlansEditBody">
+                        <div className="textualPlanEdit">
+                            <div className="labelInput">
+                                <label htmlFor="planEditName">Name</label>
+                                <input
+                                    type='text'
+                                    id="planEditName"
+                                    onChange={e => setName(e.target.value)}
+                                    disabled={loading}
+                                />
+                            </div>
 
-                            {
-                                plans.map((plan: PlanModel) => {
-                                    return (
-                                        <tr>
-                                            <td className="plansActionColumn">
-                                                <EditIconButton size={40} onClick={() => updatePage(plan)} />
-                                            </td>
-                                            <td className="plansActionColumn">
-                                                <DeleteIconButton size={40} onClick={() => deletePlan(plan)}/>
-                                            </td>
-                                            <td>{ plan.getName() }</td>
-                                            <td style={{width: '120px'}}>{ plan.getStatus() ? 'Active' : 'Inactive' }</td>
-                                        </tr>
-                                    );
-                                })
-                            }
-                            
-                        </tbody>
-                    </table>
+                            <div className="labelInput" id="musicLimitDiv">
+                                <label htmlFor="planEditLimit">Musics limit</label>
+                                <input
+                                    type='number'
+                                    id="planEditLimit"
+                                    onChange={e => setMusicLimit(+e.target.value)}
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
 
-                    <div className="pagination">
-                        <div className='paginationContainer' >
-                            <ul className="paginationMenu">
-                                <li onClick={pageBackward}>
-                                    <span>{'<'}</span>
-                                </li>
-
-                                {
-                                    pageOptions.map((page: number) => {
-                                        if (page === currentPage) {
-                                            return (
-                                                <li className="currentPage">
-                                                    <span>{currentPage}</span>
-                                                </li>
-                                            );
-                                        }
-                                        
-                                        return (
-                                            <li onClick={() => selectPage(page)}>
-                                                <span>{page}</span>
-                                            </li>
-                                        );
-                                    })
-                                }
-
-                                <li onClick={pageForward}>
-                                    <span>{'>'}</span>
-                                </li>
-                            </ul>
+                        <div className="labelInput" id="imageDiv">
+                            <label htmlFor="planEditName">Plan image</label>
+                            { image !== "" ? <img src={image} id="adminPlanImage"/> : null }
+                            <input
+                                type='file'
+                                id="planEditImage"
+                                onChange={uploadImage}
+                                disabled={loading}
+                            />
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DeleteIconButton from "../../../../components/button/delete/delete-icon-button";
 import EditIconButton from "../../../../components/button/edit/edit-icon-button";
+import { AdminHeaderNav, AdminPageSelector } from "../../../../components/header/admin/admin-header";
 import TextualLogo from "../../../../components/logo/textual/logo-textual";
 import PlanModel from "../../../../models/plan";
 import './admin-plans-list-page.css'
@@ -9,10 +11,13 @@ function AdminPlansListPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setLastPage] = useState(10);
     const [pageOptions, setPageOptions] = useState([1, 2, 3, 4, 5]);
+    const [nameFilter, setNameFilter] = useState("");
+    const [limitFilter, setLimitFilter] = useState("");
+    const navigate = useNavigate();
 
     const plans: PlanModel[] = [
-        new PlanModel('Gold', true),
-        new PlanModel('Basic', false),
+        new PlanModel('Gold', true, 5),
+        new PlanModel('Basic', false, 3)
     ];
 
     function pageForward(): void {
@@ -50,23 +55,28 @@ function AdminPlansListPage() {
     }
 
     function updatePage(plan: PlanModel): void {
-        console.log(plan.getName());
+        navigate('edit', {replace: true});
     }
 
     function createPage(): void {
-        console.log('new plan');
+        navigate('new', {replace: true});
+    }
+
+    function filterPlans(): PlanModel[] {
+        const filtered: PlanModel[] = [];
+
+        plans.forEach((plan: PlanModel, _index: number) => {
+            if (plan.nameIncludes(nameFilter) && plan.musicLimitIncludes(limitFilter)) {
+                filtered.push(plan);
+            }
+        })        
+
+        return filtered;
     }
 
     return (
         <div className="adminPlans">
-            <header className='adminNavbar'>
-                <TextualLogo fontSize={28} />
-                <div className="navbarMenu">
-                    <a href="clients"><h4>Clients</h4></a>
-                    <a href="musics"><h4>Musics</h4></a>
-                    <h4>Plans</h4>
-                </div>
-            </header>
+            <AdminHeaderNav page={AdminPageSelector.PLANS} />
             <div className="adminPlansBody">
                 <div className="adminPlansCard">
                     <div id="adminPlansHeader">
@@ -80,26 +90,59 @@ function AdminPlansListPage() {
                                 <th></th>
                                 <th></th>
                                 <th>Name</th>
+                                <th>Music Limit</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td className="plansActionColumn"></td>
+                                <td className="plansActionColumn"></td>
+                                <td
+                                    style={{paddingLeft: '10px', paddingRight: '10px'}}
+                                >
+                                    <input
+                                        style={{width: '100%', boxSizing: 'border-box', lineHeight:'22px'}}
+                                        placeholder='Filter'
+                                        onChange={e => setNameFilter(e.target.value)}
+                                    />
+                                </td>
+                                <td
+                                    style={{width: '240px', paddingLeft: '10px', paddingRight: '10px'}}
+                                >
+                                    <input
+                                        style={{width: '100%', boxSizing: 'border-box', lineHeight:'22px'}}
+                                        placeholder='Filter'
+                                        onChange={e => setLimitFilter(e.target.value)}
+                                    />
+                                </td>
+                                <td style={{width: '240px'}}></td>
+                            </tr>
 
                             {
-                                plans.map((plan: PlanModel) => {
-                                    return (
+                                filterPlans().length === 0
+                                    ? (
                                         <tr>
-                                            <td className="plansActionColumn">
-                                                <EditIconButton size={40} onClick={() => updatePage(plan)} />
+                                            <td colSpan={5} style={{textAlign: 'start', paddingLeft: '10px'}}>
+                                                No results found
                                             </td>
-                                            <td className="plansActionColumn">
-                                                <DeleteIconButton size={40} onClick={() => deletePlan(plan)}/>
-                                            </td>
-                                            <td>{ plan.getName() }</td>
-                                            <td style={{width: '120px'}}>{ plan.getStatus() ? 'Active' : 'Inactive' }</td>
                                         </tr>
-                                    );
-                                })
+                                    )
+                                    : filterPlans().map((plan: PlanModel) => {
+                                        return (
+                                            <tr>
+                                                <td className="plansActionColumn">
+                                                    <EditIconButton size={40} onClick={() => updatePage(plan)} />
+                                                </td>
+                                                <td className="plansActionColumn">
+                                                    <DeleteIconButton size={40} onClick={() => deletePlan(plan)}/>
+                                                </td>
+                                                <td>{ plan.getName() }</td>
+                                                <td style={{width: '240px'}}>{ plan.getMusicLimit() }</td>
+                                                <td style={{width: '240px'}}>{ plan.getStatus() ? 'Active' : 'Inactive' }</td>
+                                            </tr>
+                                        );
+                                    })
                             }
                             
                         </tbody>

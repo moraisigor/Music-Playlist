@@ -85,62 +85,33 @@
     margin-top: 20px;
 }
 
-.plansTable thead {
-    background-color: #25344D;
-    color: #E5E5E5;
-    line-height: 40px;
-}
-
-.plansTable tbody {
-    background-color: white;
-    color: #25344D;
-    line-height: 40px;
-}
-
-.plansActionColumn {
-    width: 50px;
-    box-align: center;
-    padding: 5px;
-}
-
-.plansActionColumn > * {
-    margin-left: 5px;
-}
-
-.plansTable tfoot {
-    background-color: #25344D;
-    color: #E5E5E5;
-    line-height: 40px;
-}
-
-.pagination {
+.adminPlansEditBody {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.paginationContainer {
+.textualPlanEdit {
+    width: 100%;
     display: flex;
-    flex-direction: row;
+    justify-content: flex-start;
 }
 
-.paginationMenu {
-    list-style-type: none;
+#musicLimitDiv {
+    margin-left: 40px;
 }
 
-.paginationMenu li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    float: left;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    background-color: white;
-    border: 1px solid #25344D;
+#planEditName {
+    width: 320px;
 }
 
-.currentPage {
-    cursor: default !important;
-    background-color: #7DAFFF !important;
+#adminPlanImage {
+    margin-top: 5px;
+    height: 400px;
+    width: 320px;
+}
+
+#imageDiv {
+    margin-top: 40px;
 }

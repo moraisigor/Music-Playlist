@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.labelInput {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.labelInput label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.labelInput input {
+  line-height: 32px;
+}
