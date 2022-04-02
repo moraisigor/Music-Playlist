@@ -9,5 +9,5 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=musicplaylist
     ports:
-      - 5432:15432
+      - 15432:5432
     restart: always
