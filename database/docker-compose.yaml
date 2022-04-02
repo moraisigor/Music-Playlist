@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  database:
+    container_name: music_playlist_db
+    image: postgres:14.2-bullseye
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=musicplaylist
+    ports:
+      - 5432:15432
+    restart: always
