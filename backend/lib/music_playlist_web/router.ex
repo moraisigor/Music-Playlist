@@ -7,6 +7,8 @@ defmodule MusicPlaylistWeb.Router do
 
   scope "/api", MusicPlaylistWeb do
     pipe_through :api
+
+    resources "/admins", AdminController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development

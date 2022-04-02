@@ -6,6 +6,7 @@ config :music_playlist, MusicPlaylist.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "music_playlist_dev",
+  port: 15432,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
