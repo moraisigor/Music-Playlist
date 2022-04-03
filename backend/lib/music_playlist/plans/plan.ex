@@ -5,7 +5,7 @@ defmodule MusicPlaylist.Plans.Plan do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "plans" do
-    field :active, :boolean, default: false
+    field :active, :boolean, default: true
     field :image_url, :string, default: ""
     field :music_limit, :integer
     field :name, :string

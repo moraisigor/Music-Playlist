@@ -46,7 +46,7 @@ defmodule MusicPlaylistWeb.PlanController do
   def delete(conn, %{"id" => id}) do
     plan = Repository.get_plan!(id)
 
-    with {:ok, %Plan{}} <- Repository.delete_plan(plan) do
+    with {:ok, %Plan{}} <- Repository.update_plan(plan, %{active: false}) do
       send_resp(conn, :no_content, "")
     end
   end
