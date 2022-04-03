@@ -4,6 +4,7 @@ import DeleteIconButton from "../../../../components/button/delete/delete-icon-b
 import EditIconButton from "../../../../components/button/edit/edit-icon-button";
 import { AdminHeaderNav, AdminPageSelector } from "../../../../components/header/admin/admin-header";
 import CircularLoader from "../../../../components/loader/circular_loader";
+import Pagination from "../../../../components/pagination/pagination";
 import PlanModel from "../../../../models/plan";
 import { inactivatePlan, listPlans } from "../../../../services/plan_service";
 import './admin-plans-list-page.css'
@@ -197,37 +198,13 @@ function AdminPlansListPage() {
                                             
                                         </tbody>
                                     </table>
-                                    <div className="pagination">
-                                        <div className='paginationContainer' >
-                                            <ul className="paginationMenu">
-                                                <li onClick={pageBackward}>
-                                                    <span>{'<'}</span>
-                                                </li>
-
-                                                {
-                                                    pageOptions.map((page: number) => {
-                                                        if (page === currentPage) {
-                                                            return (
-                                                                <li className="currentPage">
-                                                                    <span>{currentPage}</span>
-                                                                </li>
-                                                            );
-                                                        }
-                                                        
-                                                        return (
-                                                            <li onClick={() => selectPage(page)}>
-                                                                <span>{page}</span>
-                                                            </li>
-                                                        );
-                                                    })
-                                                }
-
-                                                <li onClick={pageForward}>
-                                                    <span>{'>'}</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <Pagination
+                                        current={currentPage}
+                                        options={pageOptions}
+                                        pageBackward={pageBackward}
+                                        pageForward={pageForward}
+                                        onSelect={selectPage}
+                                    />
                                 </div>
                             )
                     }
