@@ -2,7 +2,7 @@ import './circular_loader.css';
 
 function CircularLoader() {
   return (
-    <div class="loader"></div>
+    <div className="loader"></div>
   );
 }
 
