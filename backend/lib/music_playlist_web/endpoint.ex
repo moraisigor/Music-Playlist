@@ -44,5 +44,6 @@ defmodule MusicPlaylistWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  plug Corsica, max_age: 600, origins: "*"
   plug MusicPlaylistWeb.Router
 end
