@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DeleteIconButton from "../../../../components/button/delete/delete-icon-button";
 import EditIconButton from "../../../../components/button/edit/edit-icon-button";
 import { AdminHeaderNav, AdminPageSelector } from "../../../../components/header/admin/admin-header";
 import CircularLoader from "../../../../components/loader/circular_loader";
 import TextualLogo from "../../../../components/logo/textual/logo-textual";
 import PlanModel from "../../../../models/plan";
-import { listAllPlans } from "../../../../services/plan_service";
+import { createPlan, listAllPlans, updatePlan } from "../../../../services/plan_service";
 import './admin-plans-edit-page.css'
 
 interface EditPlanProps {
@@ -14,31 +14,83 @@ interface EditPlanProps {
 }
 
 function AdminPlansEditPage(props: EditPlanProps) {
+    const location = useLocation();
     const [loading, setLoading] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
     const [musicLimit, setMusicLimit] = useState<number>(0);
+    const [parentId, setParentId] = useState<string>("");
     const [plans, setPlans] = useState<PlanModel[]>([]);
+    const [original, setOriginal] = useState<PlanModel>();
     const navigate = useNavigate();
 
     useEffect(() => {
-        loadAllPlans();
-    }, []);
+        if (!props.isNew) {
+            setOriginal(location.state as PlanModel);
+            setName(original ? original.name : "");
+            setMusicLimit(original ? original.musicLimit : 0);            
+            setParentId(original ? original.parentId : "");
+        }
 
-    function save() {
-        console.log(name);
-        console.log(musicLimit);
-        navigate('/admin/plans', {replace: true});
+        loadAllPlans();
+    }, [original]);
+
+    async function save() {
+        setLoading(true);
+
+        const response = await createPlan(name, musicLimit, parentId);
+
+        if (response) {
+            navigate('/admin/plans', {replace: true});
+        }
+        else {
+            setLoading(false);
+        }
+    }
+    
+    async function update() {
+        setLoading(true);
+
+        let obj = {}
+
+        if (name === original?.name) {
+            obj = {'music_limit': musicLimit};
+        } else {
+            obj = {
+                'name': name,
+                'music_limit': musicLimit
+            };
+        }
+
+        const response = await updatePlan(original!.id, obj, parentId);
+
+        if (response) {
+            navigate('/admin/plans', {replace: true});
+        }
+        else {
+            setLoading(false);
+        }
     }
 
-    function validadeForm() {
+    function validadeNewForm() {
         return name !== "" && musicLimit > 0 && !loading;
+    }
+
+    function validadeEditForm() {
+        return !loading && ((name !== "" && name !== original?.name) ||
+            (musicLimit > 0 && musicLimit !== original?.musicLimit) ||
+            (parentId !== original?.parentId));
     }
     
     async function loadAllPlans() {
         setLoading(true);
         const response = await listAllPlans();
-        
-        setPlans(response);
+
+        if (props.isNew) {
+            setPlans(response);
+        } else {
+            let receivedPlans = response.filter(p => p.id !== original?.id);
+            setPlans(receivedPlans);
+        }
         
         setLoading(false);
     }
@@ -50,7 +102,11 @@ function AdminPlansEditPage(props: EditPlanProps) {
                 <div className="adminPlansCard">
                     <div id="adminPlansHeader">
                         <h1> {props.isNew ? 'New' : 'Edit'} Plan</h1>
-                        <button disabled={!validadeForm()} type="button" onClick={save}>
+                        <button
+                            type="button"
+                            disabled={props.isNew ? !validadeNewForm() : !validadeEditForm()}
+                            onClick={props.isNew ? save : update}
+                        >
                             { props.isNew ? 'SAVE' : 'UPDATE' }
                         </button>
                     </div>
@@ -68,6 +124,7 @@ function AdminPlansEditPage(props: EditPlanProps) {
                                             id="planEditName"
                                             onChange={e => setName(e.target.value)}
                                             disabled={loading}
+                                            value={name}
                                             />
                                     </div>
 
@@ -78,12 +135,14 @@ function AdminPlansEditPage(props: EditPlanProps) {
                                             id="planEditLimit"
                                             onChange={e => setMusicLimit(+e.target.value)}
                                             disabled={loading}
+                                            min={1}
+                                            value={musicLimit}
                                         />
                                     </div>
                                     
                                     <div className="labelInput" id="parentDiv">
                                         <label htmlFor="planEditLimit">Parent plan</label>
-                                        <select>
+                                        <select onChange={e => setParentId(e.target.value)} defaultValue={original?.parentId}>
                                             <option value="">Select</option>
                                             {
                                                 plans.map((plan: PlanModel, index: number) => {

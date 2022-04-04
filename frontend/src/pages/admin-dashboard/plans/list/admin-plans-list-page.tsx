@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ActivateIconButton from "../../../../components/button/activate/activate-icon-button";
 import DeleteIconButton from "../../../../components/button/delete/delete-icon-button";
 import EditIconButton from "../../../../components/button/edit/edit-icon-button";
 import { AdminHeaderNav, AdminPageSelector } from "../../../../components/header/admin/admin-header";
 import CircularLoader from "../../../../components/loader/circular_loader";
 import Pagination from "../../../../components/pagination/pagination";
 import PlanModel from "../../../../models/plan";
-import { inactivatePlan, listPlans } from "../../../../services/plan_service";
+import { inactivatePlan, listPlans, updateActivePlan } from "../../../../services/plan_service";
 import './admin-plans-list-page.css'
 
 function AdminPlansListPage() {
@@ -62,10 +63,16 @@ function AdminPlansListPage() {
 
     async function deletePlan(plan: PlanModel): Promise<void> {
         await inactivatePlan(plan.id);
+        setPageChanged(true);
+    }
+    
+    async function activatePlan(plan: PlanModel): Promise<void> {
+        await updateActivePlan(plan.id, plan.parentId);
+        setPageChanged(true);
     }
 
     function updatePage(plan: PlanModel): void {
-        navigate('edit', {replace: true});
+        navigate('edit', {replace: true, state: plan});
     }
 
     function createPage(): void {
@@ -186,7 +193,11 @@ function AdminPlansListPage() {
                                                                     <EditIconButton size={40} onClick={() => updatePage(plan)} />
                                                                 </td>
                                                                 <td className="plansActionColumn">
-                                                                    <DeleteIconButton size={40} onClick={() => deletePlan(plan)}/>
+                                                                    {
+                                                                        plan.active
+                                                                            ? <DeleteIconButton size={40} onClick={() => deletePlan(plan)}/>
+                                                                            : <ActivateIconButton size={40} onClick={() => activatePlan(plan)}/>
+                                                                    }
                                                                 </td>
                                                                 <td>{ plan.name }</td>
                                                                 <td style={{width: '240px'}}>{ plan.musicLimit }</td>

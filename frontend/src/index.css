@@ -26,3 +26,10 @@ code {
 .labelInput input {
   line-height: 32px;
 }
+
+.labelInput select {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 200px;
+  font-size: 12px;
+}

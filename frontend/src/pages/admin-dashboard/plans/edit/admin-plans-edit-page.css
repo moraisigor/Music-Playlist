@@ -40,6 +40,12 @@
     box-shadow: 2px 2px 5px #25344D;
 }
 
+#adminPlansHeader button:disabled {
+    background-color: #c2c2c2;
+    color: #25344D;
+    cursor: default;
+}
+
 #adminPlansHeader {
     display: flex;
     width: 100%;
