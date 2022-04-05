@@ -40,6 +40,12 @@
     box-shadow: 2px 2px 5px #25344D;
 }
 
+#adminClientsHeader button:disabled {
+    background-color: #c2c2c2;
+    color: #25344D;
+    cursor: default;
+}
+
 #adminClientsHeader {
     display: flex;
     width: 100%;
@@ -48,35 +54,23 @@
     color: #25344D;
 }
 
-.musicsTable {
+.adminClientsEditBody {
     width: 100%;
-    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.musicsTable thead {
-    background-color: #25344D;
-    color: #E5E5E5;
-    line-height: 40px;
+.textualMusicEdit {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.musicsTable tbody {
-    background-color: white;
-    color: #25344D;
-    line-height: 40px;
+#musicEditName {
+    width: 500px;
 }
 
-.musicsActionColumn {
-    width: 50px;
-    box-align: center;
-    padding: 5px;
-}
-
-.musicsActionColumn > * {
-    margin-left: 5px;
-}
-
-.musicsTable tfoot {
-    background-color: #25344D;
-    color: #E5E5E5;
-    line-height: 40px;
+#planDiv {
+    margin-left: 40px;
 }
