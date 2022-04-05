@@ -22,6 +22,16 @@ export async function listPlans(page: number) {
         .catch((error) => new PlansResponse());
 }
 
+export async function listPlansByMusic(musicId: string) {
+    return await axios.get<PlanModel[]>(`${Environment.httpURL}/plans`, {
+        params: {
+            'music': musicId
+        }
+    })
+        .then((resp) => resp.data)
+        .catch((error) => []);
+}
+
 export async function listAllPlans() {
     return await axios.get<PlanModel[]>(`${Environment.httpURL}/plans`)
         .then((resp) => resp.data)
@@ -61,3 +71,4 @@ export async function updateActivePlan(id: string, parentId: string) {
         .then((resp) => resp.data)
         .catch((error) => null);
 }
+
