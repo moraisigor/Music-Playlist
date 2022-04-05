@@ -10,6 +10,7 @@ defmodule MusicPlaylistWeb.Router do
 
     resources "/admins", AdminController, except: [:new, :edit]
     resources "/plans", PlanController, except: [:new, :edit]
+    resources "/musics", MusicController, except: [:new, :edit]
   end
 
   # Enables LiveDashboard only for development

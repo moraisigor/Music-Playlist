@@ -4,6 +4,8 @@ defmodule MusicPlaylist.PlansFixtures do
   entities via the `MusicPlaylist.Plans` context.
   """
 
+  alias MusicPlaylist.Plans.{Plan, PlanHierarchy}
+
   @doc """
   Generate a unique plan name.
   """
@@ -21,8 +23,22 @@ defmodule MusicPlaylist.PlansFixtures do
         music_limit: 42,
         name: unique_plan_name()
       })
-      |> MusicPlaylist.Plans.create_plan()
+      |> Plan.Repository.create_plan()
 
     plan
+  end
+
+  @doc """
+  Generate a plan_hierarchy.
+  """
+  def plan_hierarchy_fixture(attrs \\ %{}) do
+    {:ok, plan_hierarchy} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> PlanHierarchy.Repository.create_plan_hierarchy()
+
+    plan_hierarchy
   end
 end

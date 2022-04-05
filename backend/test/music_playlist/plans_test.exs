@@ -62,4 +62,56 @@ defmodule MusicPlaylist.PlansTest do
       assert %Ecto.Changeset{} = Plans.change_plan(plan)
     end
   end
+
+  describe "plan_hierarchies" do
+    alias MusicPlaylist.Plans.PlanHierarchy
+
+    import MusicPlaylist.PlansFixtures
+
+    @invalid_attrs %{}
+
+    test "list_plan_hierarchies/0 returns all plan_hierarchies" do
+      plan_hierarchy = plan_hierarchy_fixture()
+      assert Plans.list_plan_hierarchies() == [plan_hierarchy]
+    end
+
+    test "get_plan_hierarchy!/1 returns the plan_hierarchy with given id" do
+      plan_hierarchy = plan_hierarchy_fixture()
+      assert Plans.get_plan_hierarchy!(plan_hierarchy.id) == plan_hierarchy
+    end
+
+    test "create_plan_hierarchy/1 with valid data creates a plan_hierarchy" do
+      valid_attrs = %{}
+
+      assert {:ok, %PlanHierarchy{} = plan_hierarchy} = Plans.create_plan_hierarchy(valid_attrs)
+    end
+
+    test "create_plan_hierarchy/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Plans.create_plan_hierarchy(@invalid_attrs)
+    end
+
+    test "update_plan_hierarchy/2 with valid data updates the plan_hierarchy" do
+      plan_hierarchy = plan_hierarchy_fixture()
+      update_attrs = %{}
+
+      assert {:ok, %PlanHierarchy{} = plan_hierarchy} = Plans.update_plan_hierarchy(plan_hierarchy, update_attrs)
+    end
+
+    test "update_plan_hierarchy/2 with invalid data returns error changeset" do
+      plan_hierarchy = plan_hierarchy_fixture()
+      assert {:error, %Ecto.Changeset{}} = Plans.update_plan_hierarchy(plan_hierarchy, @invalid_attrs)
+      assert plan_hierarchy == Plans.get_plan_hierarchy!(plan_hierarchy.id)
+    end
+
+    test "delete_plan_hierarchy/1 deletes the plan_hierarchy" do
+      plan_hierarchy = plan_hierarchy_fixture()
+      assert {:ok, %PlanHierarchy{}} = Plans.delete_plan_hierarchy(plan_hierarchy)
+      assert_raise Ecto.NoResultsError, fn -> Plans.get_plan_hierarchy!(plan_hierarchy.id) end
+    end
+
+    test "change_plan_hierarchy/1 returns a plan_hierarchy changeset" do
+      plan_hierarchy = plan_hierarchy_fixture()
+      assert %Ecto.Changeset{} = Plans.change_plan_hierarchy(plan_hierarchy)
+    end
+  end
 end
