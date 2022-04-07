@@ -62,13 +62,21 @@ function ClientsHomePage() {
         setOnInit(false);
     }
 
+    function exploreMusics() {}
+
     return (
-        <div className="adminPlans">
+        <div className="clientPlaylists">
             <ClientsHeaderNav />
-            <div className="adminPlansBody" style={{zIndex: '0'}}>
-                <div className="adminPlansCard">
-                    <div id="adminPlansHeader">
-                        <h1>Your musics</h1>
+            <div className="clientPlaylistsBody" style={{zIndex: '0'}}>
+                <div className="clientPlaylistsCard">
+                    <div id="clientPlaylistsHeader">
+                        <div className="clientPlaylistsTitle">
+                            <h1>Your musics</h1>
+                            <h3
+                                onClick={exploreMusics}
+                                style={{cursor: 'pointer'}}
+                            >Explore</h3>
+                        </div>
 
                         {
                             playing

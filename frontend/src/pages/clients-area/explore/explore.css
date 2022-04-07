@@ -1,33 +1,4 @@
-.playFooter {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 0px;
-    height: 90px;
-    width: 100%;
-    background-color: #25344D;
-    opacity: 80%;
-}
-
-.musicBar {
-    width: 50%;
-    height: 10px;
-    margin-top: 10px;
-    background-color: #E5E5E5;
-}
-
-.musicActiveBar {
-    height: 100%;
-    background-color: #7DAFFF;
-}
-
-.tableActionIcon {
-    cursor: pointer;
-}
-
-.clientPlaylists {
+.adminMusics {
     text-align: center;
     background-color: white;
     min-height: 100vh;
@@ -35,14 +6,14 @@
     justify-content: center;
 }
 
-.clientPlaylistsBody {
+.adminMusicsBody {
     display: flex;
     align-items: flex-start;
     justify-content: center;
     height: calc(100vh - 60px);
 }
 
-.clientPlaylistsCard {
+.adminMusicsCard {
     display: flex;
     flex-direction: column;
     background-color: #E5E5E5;
@@ -54,14 +25,7 @@
     padding-bottom: 0px;
 }
 
-.clientPlaylistsTitle {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-#clientPlaylistsHeader button {
+#adminMusicsHeader button {
     display: block;
     width: 120px;
     border: none;
@@ -76,7 +40,7 @@
     box-shadow: 2px 2px 5px #25344D;
 }
 
-#clientPlaylistsHeader {
+#adminMusicsHeader {
     display: flex;
     width: 100%;
     align-items: center;
@@ -84,34 +48,34 @@
     color: #25344D;
 }
 
-.playlistTable {
+.musicsTable {
     width: 100%;
     margin-top: 20px;
 }
 
-.playlistTable thead {
+.musicsTable thead {
     background-color: #25344D;
     color: #E5E5E5;
     line-height: 40px;
 }
 
-.playlistTable tbody {
+.musicsTable tbody {
     background-color: white;
     color: #25344D;
     line-height: 40px;
 }
 
-.playlistActionColumn {
+.musicsActionColumn {
     width: 50px;
     box-align: center;
     padding: 5px;
 }
 
-.playlistActionColumn > * {
+.musicsActionColumn > * {
     margin-left: 5px;
 }
 
-.playlistTable tfoot {
+.musicsTable tfoot {
     background-color: #25344D;
     color: #E5E5E5;
     line-height: 40px;

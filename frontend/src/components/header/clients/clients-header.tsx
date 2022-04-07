@@ -9,12 +9,21 @@ export function ClientsHeaderNav() {
 
     function signOut() {
         sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userId');
         navigate('/', {replace: true});
+    }
+
+    function goToHome() {
+        navigate('/home', {replace: true});
     }
 
     return (
         <header className='adminNavbar'>
-            <TextualLogo fontSize={28} />
+            <div
+                onClick={goToHome}
+            >
+                <TextualLogo fontSize={28}/>
+            </div>
             <FontAwesomeIcon icon={faSignOut} onClick={signOut} className="signOutButton"/>
         </header>
     );
