@@ -1,0 +1,10 @@
+.stopIconButton {
+    border-radius: 50%;
+    background-color: #7DAFFF;
+    color: white;
+    cursor: pointer;
+    box-shadow: 1px 1px 5px #25344D;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}

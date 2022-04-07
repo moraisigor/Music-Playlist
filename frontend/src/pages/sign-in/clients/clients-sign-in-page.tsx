@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import CircularLoader from '../../../components/loader/circular_loader';
 import SoundWaveLogo from '../../../components/logo/sound-wave/logo-sound-wave';
 import TextualLogo from '../../../components/logo/textual/logo-textual';
-import { adminSignIn } from '../../../services/authentication_service';
+import { adminSignIn, clientSignIn } from '../../../services/authentication_service';
 import './clients-sign-in-page.css';
 
 function ClientsSignInPage() {
@@ -10,19 +11,25 @@ function ClientsSignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [remember, setRemember] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sessionStorage.getItem('token')) {
+      navigate('/home', {replace: true});
+    }
+  }, [])
 
   async function signIn(): Promise<void> {
     setLoading(true);
     console.log(remember);
 
-    adminSignIn(email, password)
-      .then((response: string) => {
-        setLoading(false);
-        //alert("Admin logged");
+    clientSignIn(email, password)
+      .then((response) => {
+        sessionStorage.setItem('token', response!.token);
+        navigate('/home', {replace: true});
       })
       .catch(error => {
         setLoading(false);
-        alert("Admin error");
       })
   }
 
@@ -63,11 +70,6 @@ function ClientsSignInPage() {
                           ENVIAR
                         </button>
                   }
-
-                  <div className='inputRemember'>
-                    <input type='checkbox' id='rembemberMark' disabled={loading} checked={remember} onClick={e => setRemember(!remember)} />
-                    <label htmlFor='rememberMark'>Remember me</label>
-                  </div>
 
                   <a
                     href='https://github.com/ugiete/Music-Playlist'

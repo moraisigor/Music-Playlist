@@ -122,7 +122,7 @@ function AdminClientsListPage() {
 
     return (
         <div className="adminClients">
-            <AdminHeaderNav page={AdminPageSelector.MUSICS} />
+            <AdminHeaderNav page={AdminPageSelector.CLIENTS} />
             <div className="adminClientsBody">
                 <div className="adminClientsCard">
                     <div id="adminClientsHeader">

@@ -29,11 +29,12 @@ export async function listClients(page: number) {
     .catch((error) => new ClientsResponse());
 }
 
-export async function createClient(name: string, planId: string) {
+export async function createClient(email: string, password: string, planId: string) {
     return await axios.post<ClientModel>(`${Environment.httpURL}/clients`, {
-        "music": {
-            "name": name,
-            "plan": planId
+        "client": {
+            "email": email,
+            "password": password,
+            "plan_id": planId
         }
     })
         .then((resp) => resp.data)

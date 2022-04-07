@@ -65,11 +65,6 @@ function AdminSignInPage() {
                         </button>
                   }
 
-                  <div className='inputRemember'>
-                    <input type='checkbox' id='rembemberMark' disabled={loading} checked={remember} onClick={e => setRemember(!remember)} />
-                    <label htmlFor='rememberMark'>Remember me</label>
-                  </div>
-
                   <a
                     href='https://github.com/ugiete/Music-Playlist'
                     target='_blank'

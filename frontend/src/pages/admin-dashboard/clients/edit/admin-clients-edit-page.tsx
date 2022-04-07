@@ -3,50 +3,51 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AdminHeaderNav, AdminPageSelector } from "../../../../components/header/admin/admin-header";
 import CircularLoader from "../../../../components/loader/circular_loader";
 import Pagination from "../../../../components/pagination/pagination";
-import MusicModel from "../../../../models/music";
+import ClientModel from "../../../../models/client";
 import PlanModel from "../../../../models/plan";
-import { createMusic, updateMusic } from "../../../../services/music_service";
-import { listAllPlans, listPlansByMusic } from "../../../../services/plan_service";
+import { createClient, updateClient } from "../../../../services/client_service";
+import { listAllPlans } from "../../../../services/plan_service";
 import './admin-clients-edit-page.css'
 
-interface EditMusicProps {
+interface EditClientProps {
     isNew: boolean;
 }
 
-function AdminClientsEditPage(props: EditMusicProps) {
+function AdminClientsEditPage(props: EditClientProps) {
     const location = useLocation();
     const [loading, setLoading] = useState<boolean>(false);
-    const [loadingMusicPlans, setLoadingMusicPlans] = useState<boolean>(false);
-    const [name, setName] = useState<string>("");
+    const [loadingClientPlans, setLoadingClientPlans] = useState<boolean>(false);
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     const [plan, setPlan] = useState<string>("");
-    const [original, setOriginal] = useState<MusicModel>();
+    const [original, setOriginal] = useState<ClientModel>();
     const [plans, setPlans] = useState<PlanModel[]>([]);
-    const [musicPlans, setMusicPlans] = useState<PlanModel[]>([]);
-    const [changeMusicPlan, setChangeMusicPlan] = useState<boolean>(false);
+    const [clientPlans, setClientPlans] = useState<PlanModel[]>([]);
+    const [changeClientPlan, setChangeClientPlan] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!props.isNew) {
-            setOriginal(location.state as MusicModel);
-            setName(original ? original.name : "");
+            setOriginal(location.state as ClientModel);
+            setEmail(original ? original.email : "");
         }
 
-        if (!changeMusicPlan) {
-            loadAllPlans();
+        if (!changeClientPlan) {
             loadAvailablePlans();
+            loadAllPlans();
         }
 
 
 
-    }, [original, changeMusicPlan]);
+    }, [original, changeClientPlan]);
 
     async function save() {
         setLoading(true);
 
-        const response = await createMusic(name, plan);
+        const response = await createClient(email, password, plan);
 
         if (response) {
-            navigate('/admin/musics', {replace: true});
+            navigate('/admin/clients', {replace: true});
         }
         else {
             setLoading(false);
@@ -58,18 +59,18 @@ function AdminClientsEditPage(props: EditMusicProps) {
 
         let obj = {}
 
-        if (name === original?.name) {
+        if (email === original?.email) {
             obj = {};
         } else {
             obj = {
-                'name': name
+                'email': email
             };
         }
 
-        const response = await updateMusic(original!.id, obj, plan);
+        const response = await updateClient(original!.id, obj, plan);
 
         if (response) {
-            navigate('/admin/musics', {replace: true});
+            navigate('/admin/clients', {replace: true});
         }
         else {
             setLoading(false);
@@ -77,11 +78,11 @@ function AdminClientsEditPage(props: EditMusicProps) {
     }
 
     function validadeNewForm() {
-        return name !== "" && plan !== "" && !loading;
+        return email !== "" &&  password !== "" && plan !== "" && !loading;
     }
 
     function validadeEditForm() {
-        return !loading && ((name !== "" && name !== original?.name) || plan !== "");
+        return !loading && ((email !== "" && email !== original?.email) || plan !== "");
     }
     
     async function loadAllPlans() {
@@ -91,37 +92,45 @@ function AdminClientsEditPage(props: EditMusicProps) {
         if (props.isNew) {
             setPlans(response);
         } else {
-            let receivedPlans = response.filter(p => p.id !== original?.id);
-            setPlans(receivedPlans);
+            setPlans(response);
+
+            for (let index = 0; index < response.length; index++) {
+                const p: PlanModel = response[index];
+                
+                if (response[index].name === original?.plan) {
+                    setPlan(p.id);
+                    break;
+                }
+            }
         }
         
         setLoading(false);
     }
     
     async function loadAvailablePlans() {
-        setLoadingMusicPlans(true);
+        /* setLoadingClientPlans(true);
         
         if (props.isNew) {
-            setMusicPlans([]);
+            setClientPlans([]);
         } else {
-            const response = await listPlansByMusic(original ? original.id : "null");
+            const response = await listPlansByClient(original ? original.id : "null");
 
             if (response.length > 0) {
-                setMusicPlans(response);
+                setClientPlans(response);
             }
         }
         
-        setLoadingMusicPlans(false);
-        setChangeMusicPlan(true);
+        setLoadingClientPlans(false);
+        setChangeClientPlan(true); */
     }
 
     return (
         <div className="adminClients">
-            <AdminHeaderNav page={AdminPageSelector.MUSICS} />
+            <AdminHeaderNav page={AdminPageSelector.CLIENTS} />
             <div className="adminClientsBody">
                 <div className="adminClientsCard">
                     <div id="adminClientsHeader">
-                        <h1> {props.isNew ? 'New' : 'Edit'} Music</h1>
+                        <h1> {props.isNew ? 'New' : 'Edit'} Client</h1>
                         <button
                             type="button"
                             disabled={props.isNew ? !validadeNewForm() : !validadeEditForm()}
@@ -137,21 +146,37 @@ function AdminClientsEditPage(props: EditMusicProps) {
                             ? <CircularLoader />
                             : (
                                 <div>
-                                    <div className="textualMusicEdit">
-                                        <div className="labelInput">
-                                            <label htmlFor="musicEditName">Name</label>
-                                            <input
-                                                type='text'
-                                                id="musicEditName"
-                                                onChange={e => setName(e.target.value)}
-                                                disabled={loading}
-                                                value={name}
+                                    <div className="textualClientEdit">
+                                        <div>
+                                            <div className="labelInput">
+                                                <label htmlFor="clientEditName">Email</label>
+                                                <input
+                                                    type='text'
+                                                    id="clientEditName"
+                                                    onChange={e => setEmail(e.target.value)}
+                                                    disabled={loading}
+                                                    value={email}
                                                 />
+                                            </div>
+                                            <div className="labelInput" style={{marginTop: '10px'}}>
+                                                <label htmlFor="clientEditName">Password</label>
+                                                <input
+                                                    type='password'
+                                                    id="clientEditPassword"
+                                                    onChange={e => setPassword(e.target.value)}
+                                                    disabled={loading || !props.isNew}
+                                                    value={
+                                                        props.isNew
+                                                            ? password
+                                                            : '********'
+                                                    }
+                                                />
+                                            </div>
                                         </div>
                                         
-                                        <div className="labelInput" id="planDiv">
-                                            <label htmlFor="musicEditPlan">Plan</label>
-                                            <select id="musicEditPlan" onChange={e => setPlan(e.target.value)}>
+                                        <div className="labelInput" id="clientPlanDiv">
+                                            <label htmlFor="clientPlanEditPlan">Plan</label>
+                                            <select id="clientPlanEditPlan" value={plan} onChange={e => setPlan(e.target.value)}>
                                                 <option value="">Select</option>
                                                 {
                                                     plans.map((plan: PlanModel, index: number) => {
@@ -164,19 +189,19 @@ function AdminClientsEditPage(props: EditMusicProps) {
                                         </div>
                                     </div>
                                     {
-                                        loadingMusicPlans
+                                        loadingClientPlans
                                             ? <CircularLoader />
-                                            : <div className="plansTable">
+                                            : <div className="clientsTable">
                                                 <table style={{width: '100%'}}>
                                                     <thead>
                                                         <tr>
-                                                            <th>Available at</th>
+                                                            <th>Playlist</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
 
                                                     {
-                                                            musicPlans.length === 0
+                                                            clientPlans.length === 0
                                                                 ? (
                                                                     <tr>
                                                                         <td colSpan={5} style={{textAlign: 'start', paddingLeft: '10px'}}>
@@ -184,7 +209,7 @@ function AdminClientsEditPage(props: EditMusicProps) {
                                                                         </td>
                                                                     </tr>
                                                                 )
-                                                                : musicPlans.map((plan: PlanModel) => {
+                                                                : clientPlans.map((plan: PlanModel) => {
                                                                     return (
                                                                         <tr>
                                                                             <td>{ plan.name }</td>

@@ -1,0 +1,28 @@
+.playFooter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 0px;
+    height: 90px;
+    width: 100%;
+    background-color: #25344D;
+    opacity: 80%;
+}
+
+.musicBar {
+    width: 50%;
+    height: 10px;
+    margin-top: 10px;
+    background-color: #E5E5E5;
+}
+
+.musicActiveBar {
+    height: 100%;
+    background-color: #7DAFFF;
+}
+
+.tableActionIcon {
+    cursor: pointer;
+}

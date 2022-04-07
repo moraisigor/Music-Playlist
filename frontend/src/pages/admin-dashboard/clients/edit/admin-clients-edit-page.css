@@ -61,16 +61,20 @@
     align-items: flex-start;
 }
 
-.textualMusicEdit {
+.textualClientEdit {
     width: 100%;
     display: flex;
     justify-content: flex-start;
 }
 
-#musicEditName {
+#clientEditName {
     width: 500px;
 }
 
-#planDiv {
+#clientEditPassword {
+    width: 500px;
+}
+
+#clientPlanDiv {
     margin-left: 40px;
 }
