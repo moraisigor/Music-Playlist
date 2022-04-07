@@ -18,6 +18,10 @@ config :music_playlist, MusicPlaylistWeb.Endpoint,
   pubsub_server: MusicPlaylist.PubSub,
   live_view: [signing_salt: "rOj/pKJq"]
 
+config :music_playlist, MusicPlaylist.Accounts.Guardian,
+  issuer: "music_playlist",
+  secret_key: "pWCTGQdyHH7qqOwDcSLwqq7tz5GrjiyXAmct3QTkmdoH1RsCfAgt02ZH9UuFdBfH"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

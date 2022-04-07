@@ -1,4 +1,4 @@
-defmodule MusicPlaylist.Clients.Client do
+defmodule MusicPlaylist.Accounts.Clients.Client do
   use Ecto.Schema
   import Ecto.Changeset
 

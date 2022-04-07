@@ -1,8 +1,9 @@
 defmodule MusicPlaylistWeb.MusicController do
   use MusicPlaylistWeb, :controller
 
+  alias MusicPlaylist.Accounts.Clients.Client
   alias MusicPlaylist.Plans.{Plan, PlanHierarchy}
-  alias MusicPlaylist.Musics.{Music, MusicPlan}
+  alias MusicPlaylist.Musics.{Music, MusicPlan, Playlist}
   alias MusicPlaylist.Musics.Music.Repository
 
   action_fallback MusicPlaylistWeb.FallbackController
@@ -83,6 +84,36 @@ defmodule MusicPlaylistWeb.MusicController do
 
     with {:ok, %Music{}} <- Repository.update_music(music, %{active: false}) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def list_playlist(conn, %{"id" => id}) do
+    musics = id
+      |> Playlist.Repository.list_playlist_by_client()
+      |> Enum.map(fn playlist -> Repository.get_music!(playlist.music_id) end)
+
+    render(conn, "all.json", musics: musics)
+  end
+
+  def insert_music(conn, %{"music_id" => music_id, "client_id" => client_id}) do
+    musics_max = client_id
+      |> Client.Repository.get_client!()
+      |> Map.get(:plan_id)
+      |> Plan.Repository.get_plan!()
+      |> Map.get(:music_limit)
+
+    if Playlist.Repository.count_musics(client_id) < musics_max do
+      case Playlist.Repository.create_playlist(%{music_id: music_id, client_id: client_id}) do
+        {:ok, _} ->
+          conn
+          |> put_status(:created)
+          |> render("playlist.json", flag: true)
+        _ ->
+          conn
+          |> render("playlist.json", flag: false)
+      end
+    else
+      conn |> render("playlist.json", flag: false)
     end
   end
 end

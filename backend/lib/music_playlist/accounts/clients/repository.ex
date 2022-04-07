@@ -1,4 +1,4 @@
-defmodule MusicPlaylist.Clients.Client.Repository do
+defmodule MusicPlaylist.Accounts.Clients.Client.Repository do
   @moduledoc """
   The Clients context.
   """
@@ -6,7 +6,7 @@ defmodule MusicPlaylist.Clients.Client.Repository do
   import Ecto.Query, warn: false
   alias MusicPlaylist.Repo
 
-  alias MusicPlaylist.Clients.Client
+  alias MusicPlaylist.Accounts.Clients.Client
 
   @doc """
   Returns the list of clients.
@@ -68,6 +68,22 @@ defmodule MusicPlaylist.Clients.Client.Repository do
 
   """
   def get_client!(id), do: Repo.get!(Client, id)
+
+  @doc """
+  Gets a single client by email.
+
+  Raises `Ecto.NoResultsError` if the Client does not exist.
+
+  ## Examples
+
+      iex> get_client_by_email!("user@email.com")
+      %Client{}
+
+      iex> get_client_by_email!("non_user@email.com")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_client_by_email!(email), do: Repo.get_by!(Client, email: email)
 
   @doc """
   Creates a client.

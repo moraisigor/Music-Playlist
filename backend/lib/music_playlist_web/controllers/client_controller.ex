@@ -1,8 +1,8 @@
 defmodule MusicPlaylistWeb.ClientController do
   use MusicPlaylistWeb, :controller
 
-  alias MusicPlaylist.Clients.Client
-  alias MusicPlaylist.Clients.Client.Repository
+  alias MusicPlaylist.Accounts.Clients.Client
+  alias MusicPlaylist.Accounts.Clients.Client.Repository
   alias MusicPlaylist.Plans.Plan
 
   action_fallback MusicPlaylistWeb.FallbackController
@@ -60,6 +60,22 @@ defmodule MusicPlaylistWeb.ClientController do
 
     with {:ok, %Client{}} <- Repository.delete_client(client) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def login(conn, %{"email" => email, "password" => password}) do
+    client = Repository.get_client_by_email!(email)
+
+    case Argon2.verify_pass(password, client.password_hash) do
+      true ->
+        case MusicPlaylist.Accounts.Guardian.encode_and_sign(client) do
+          {:ok, token, claims} ->
+            render(conn, "auth.json", %{token: token, claims: claims})
+          _ ->
+            render(conn, "auth.json", %{token: "fail", claims: ""})
+        end
+      false ->
+        render(conn, "auth.json", %{token: "", claims: ""})
     end
   end
 end

@@ -12,6 +12,11 @@ defmodule MusicPlaylistWeb.Router do
     resources "/plans", PlanController, except: [:new, :edit]
     resources "/musics", MusicController, except: [:new, :edit]
     resources "/clients", ClientController, except: [:new, :edit]
+
+    post "/login", ClientController, :login
+
+    get "/playlist", MusicController, :list_playlist
+    post "/playlist", MusicController, :insert_music
   end
 
   # Enables LiveDashboard only for development

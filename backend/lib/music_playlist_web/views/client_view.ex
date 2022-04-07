@@ -11,7 +11,7 @@ defmodule MusicPlaylistWeb.ClientView do
   end
 
   def render("show.json", %{client: client}) do
-    %{data: render_one(client, ClientView, "client.json")}
+    %{data: render_one(client, ClientView, "simple.json")}
   end
 
   def render("client.json", %{client: client}) do
@@ -19,6 +19,20 @@ defmodule MusicPlaylistWeb.ClientView do
       id: client.id,
       email: client.email,
       plan: client.plan
+    }
+  end
+
+  def render("simple.json", %{client: client}) do
+    %{
+      id: client.id,
+      email: client.email
+    }
+  end
+
+  def render("auth.json", %{token: token, claims: claims}) do
+    %{
+      token: token,
+      claims: claims
     }
   end
 end

@@ -32,4 +32,10 @@ defmodule MusicPlaylistWeb.MusicView do
       name: music.name
     }
   end
+
+  def render("playlist.json", %{flag: flag}) do
+    %{
+      inserted: flag
+    }
+  end
 end
