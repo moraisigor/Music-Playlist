@@ -26,6 +26,7 @@ function ClientsSignInPage() {
     clientSignIn(email, password)
       .then((response) => {
         sessionStorage.setItem('token', response!.token);
+        sessionStorage.setItem('userId', response!.claims.sub);
         navigate('/home', {replace: true});
       })
       .catch(error => {

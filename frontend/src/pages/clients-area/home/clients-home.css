@@ -26,3 +26,86 @@
 .tableActionIcon {
     cursor: pointer;
 }
+
+.clientPlaylists {
+    text-align: center;
+    background-color: white;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.clientPlaylistsBody {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    height: calc(100vh - 60px);
+}
+
+.clientPlaylistsCard {
+    display: flex;
+    flex-direction: column;
+    background-color: #E5E5E5;
+    align-items: center;
+    justify-content: flex-start;
+    height: calc(100vh - 150px);
+    width: calc(100vw - 180px);
+    padding: 60px;
+    padding-bottom: 0px;
+}
+
+#clientPlaylistsHeader button {
+    display: block;
+    width: 120px;
+    border: none;
+    background-color: #7DAFFF;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    min-height: 44px;
+    color: #25344D;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px #25344D;
+}
+
+#clientPlaylistsHeader {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    color: #25344D;
+}
+
+.playlistTable {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.playlistTable thead {
+    background-color: #25344D;
+    color: #E5E5E5;
+    line-height: 40px;
+}
+
+.playlistTable tbody {
+    background-color: white;
+    color: #25344D;
+    line-height: 40px;
+}
+
+.playlistActionColumn {
+    width: 50px;
+    box-align: center;
+    padding: 5px;
+}
+
+.playlistActionColumn > * {
+    margin-left: 5px;
+}
+
+.playlistTable tfoot {
+    background-color: #25344D;
+    color: #E5E5E5;
+    line-height: 40px;
+}

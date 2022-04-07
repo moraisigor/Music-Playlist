@@ -7,11 +7,13 @@ import StopIconButton from "../../../components/button/stop/stop-icon-button";
 import { ClientsHeaderNav } from "../../../components/header/clients/clients-header";
 import CircularLoader from "../../../components/loader/circular_loader";
 import MusicModel from "../../../models/music";
+import { loadPlaylist } from "../../../services/playlist_service";
 import './clients-home.css'
 
 function ClientsHomePage() {
     const [loading, setLoading] = useState<boolean>(false);
     const [playing, setPlaying] = useState<boolean>(false);
+    const [onInit, setOnInit] = useState<boolean>(true);
     const [musicPercentage, setMusicPercentage] = useState<number>(0);
     const [musicPlayingIndex, setMusicPlayingIndex] = useState<number>(0);
     const [musics, setMusics] = useState<MusicModel[]>([
@@ -22,6 +24,9 @@ function ClientsHomePage() {
     const navigate = useNavigate();
     
     useEffect(() => {
+        if (onInit) {
+            loadMusics();
+        }
         if (playing) {
             if (musicPercentage >= 100) {
                 if (musicPlayingIndex === (musics.length - 1)) {
@@ -50,7 +55,11 @@ function ClientsHomePage() {
     }
     
     async function loadMusics(): Promise<void> {
-
+        setLoading(true);
+        const response = await loadPlaylist();
+        setMusics(response);
+        setLoading(false);
+        setOnInit(false);
     }
 
     return (
@@ -63,8 +72,8 @@ function ClientsHomePage() {
 
                         {
                             playing
-                                ? <StopIconButton size={60} onClick={() => setPlaying(false)} />
-                                : <PlayIconButton size={60} onClick={() => setPlaying(true)} />
+                                ? <StopIconButton size={60} onClick={musics.length > 0 ? () => setPlaying(false) : () => null} />
+                                : <PlayIconButton size={60} onClick={musics.length > 0 ? () => setPlaying(true) : () => null} />
                         }
                         
                     </div>
@@ -73,7 +82,7 @@ function ClientsHomePage() {
                         loading
                             ? <CircularLoader />
                             : (
-                                <div className="plansTable">
+                                <div className="playlistTable">
                                     <table style={{width: '100%'}}>
                                         <thead>
                                             <tr>
@@ -121,8 +130,8 @@ function ClientsHomePage() {
             <div className="playFooter">
                 {
                     playing
-                        ? <StopIconButton size={40} onClick={() => setPlaying(false)} />
-                        : <PlayIconButton size={40} onClick={() => setPlaying(true)} />
+                        ? <StopIconButton size={40} onClick={musics.length > 0 ? () => setPlaying(false) : () => null} />
+                        : <PlayIconButton size={40} onClick={musics.length > 0 ? () => setPlaying(true) : () => null} />
                 }
 
                 <div className="musicBar">
