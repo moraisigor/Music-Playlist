@@ -12,8 +12,13 @@ class ClientsResponse {
     }
 }
 
+function getAuth() {
+    const token: string = sessionStorage.getItem('token') || ""
+    return { authorization: `Bearer ${token}` }
+}
+
 export async function listAllClients() {
-    return await axios.get<ClientModel[]>(`${Environment.httpURL}/clients`)
+    return await axios.get<ClientModel[]>(`${Environment.httpURL}/clients`, {headers: getAuth()})
         .then((resp) => resp.data)
         .catch((error) => []);
 }
@@ -21,6 +26,7 @@ export async function listAllClients() {
 
 export async function listClients(page: number) {
     return await axios.get<ClientsResponse>(`${Environment.httpURL}/clients`, {
+        headers: getAuth(),
         params: {
             'page': page 
         }
@@ -31,25 +37,29 @@ export async function listClients(page: number) {
 
 export async function createClient(email: string, password: string, planId: string) {
     return await axios.post<ClientModel>(`${Environment.httpURL}/clients`, {
-        "client": {
-            "email": email,
-            "password": password,
-            "plan_id": planId
-        }
-    })
+            "client": {
+                "email": email,
+                "password": password,
+                "plan_id": planId
+            }
+        },
+        {headers: getAuth()}
+    )
         .then((resp) => resp.data)
         .catch((error) => null);
 }
 
 export async function updateClient(id: string, music: Object, plan: string) {
     return await axios.put<ClientModel>(`${Environment.httpURL}/clients/${id}`, {
-        "music": music,
-        "plan": plan
-    })
+            "music": music,
+            "plan": plan
+        },
+        {headers: getAuth()}
+    )
         .then((resp) => resp.data)
         .catch((error) => null);
 }
 
 export async function inactivateClient(planId: string) {
-    await axios.delete(`${Environment.httpURL}/clients/${planId}`);
+    await axios.delete(`${Environment.httpURL}/clients/${planId}`, {headers: getAuth()});
 }

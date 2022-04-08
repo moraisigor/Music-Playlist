@@ -34,14 +34,18 @@ class AuthenticationResponse {
     }
 }
 
-export async function adminSignIn(email: string, password: string): Promise<string> {
-    await delay(5000);
-    return "TOKEN";
+export async function adminSignIn(email: string, password: string) {
+    return await axios.post<AuthenticationResponse>(`${Environment.authURL}/admin`, {
+        "email": email,
+        "password": password
+    })
+        .then((resp) => resp.data)
+        .catch((error) => null);
 }
 
 
 export async function clientSignIn(email: string, password: string) {
-    return await axios.post<AuthenticationResponse>(`${Environment.httpURL}/login`, {
+    return await axios.post<AuthenticationResponse>(`${Environment.authURL}/client`, {
         "email": email,
         "password": password
     })

@@ -9,7 +9,6 @@ export function ClientsHeaderNav() {
 
     function signOut() {
         sessionStorage.removeItem('token');
-        sessionStorage.removeItem('userId');
         navigate('/', {replace: true});
     }
 

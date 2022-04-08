@@ -1,4 +1,8 @@
+import { faSignOut } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import TextualLogo from "../../logo/textual/logo-textual";
+import './admin-header.css';
 
 export enum AdminPageSelector {
     CLIENTS,
@@ -11,6 +15,13 @@ interface HeaderNavProps {
 }
 
 export function AdminHeaderNav(props: HeaderNavProps) {
+    const navigate = useNavigate();
+
+    function signOut() {
+        sessionStorage.removeItem('token');
+        navigate('/', {replace: true});
+    }
+
     return (
         <header className='adminNavbar'>
             <TextualLogo fontSize={28} />
@@ -32,6 +43,8 @@ export function AdminHeaderNav(props: HeaderNavProps) {
                         ? <h4>Plans</h4>
                         : <a href="/admin/plans"><h4>Plans</h4></a>
                 }
+
+                <FontAwesomeIcon icon={faSignOut} onClick={signOut} className="signOutButton"/>
             </div>
         </header>
     );

@@ -26,12 +26,15 @@ function ClientsSignInPage() {
     clientSignIn(email, password)
       .then((response) => {
         sessionStorage.setItem('token', response!.token);
-        sessionStorage.setItem('userId', response!.claims.sub);
         navigate('/home', {replace: true});
       })
       .catch(error => {
         setLoading(false);
       })
+  }
+
+  function goToAdminSignIn() {
+    navigate("/admin");
   }
 
   return (
@@ -68,10 +71,12 @@ function ClientsSignInPage() {
                     loading
                       ? <CircularLoader />
                       : <button id='sendButton' type="button" onClick={signIn}>
-                          ENVIAR
+                          SEND
                         </button>
                   }
 
+                  <h4 onClick={goToAdminSignIn} style={{cursor: 'pointer'}}>As admin</h4>
+                  
                   <a
                     href='https://github.com/ugiete/Music-Playlist'
                     target='_blank'

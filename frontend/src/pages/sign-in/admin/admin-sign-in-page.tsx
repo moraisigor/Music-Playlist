@@ -1,7 +1,6 @@
-import { ChangeEventHandler, useState } from 'react';
-import { ProgressBar } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CircularLoader from '../../../components/loader/circular_loader';
-import SoundWaveLogo from '../../../components/logo/sound-wave/logo-sound-wave';
 import TextualLogo from '../../../components/logo/textual/logo-textual';
 import { adminSignIn } from '../../../services/authentication_service';
 import './admin-sign-in-page.css';
@@ -11,20 +10,30 @@ function AdminSignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [remember, setRemember] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sessionStorage.getItem('token')) {
+      navigate('clients', {replace: true});
+    }
+  }, [])
 
   async function signIn(): Promise<void> {
     setLoading(true);
     console.log(remember);
 
     adminSignIn(email, password)
-      .then((response: string) => {
-        setLoading(false);
-        //alert("Admin logged");
+      .then((response) => {
+        sessionStorage.setItem('token', response!.token);
+        navigate('clients', {replace: true});
       })
       .catch(error => {
         setLoading(false);
-        alert("Admin error");
       })
+  }
+
+  function goToClientSignIn() {
+    navigate("/");
   }
 
   return (
@@ -61,9 +70,11 @@ function AdminSignInPage() {
                     loading
                       ? <CircularLoader />
                       : <button id='sendButton' type="button" onClick={signIn}>
-                          ENVIAR
+                          SEND
                         </button>
                   }
+
+                  <h4 onClick={goToClientSignIn} style={{cursor: 'pointer'}}>As client</h4>
 
                   <a
                     href='https://github.com/ugiete/Music-Playlist'

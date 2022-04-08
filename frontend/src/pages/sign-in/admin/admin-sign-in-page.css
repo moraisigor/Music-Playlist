@@ -36,12 +36,12 @@
 
 .signInCard a {
     text-decoration: none;
+    margin-top: 100px;
 }
 
 .signInCard h4 {
     font-weight: 500;
     color: #25344D;
-    margin-top: 50px;
 }
 
 .formInput {
