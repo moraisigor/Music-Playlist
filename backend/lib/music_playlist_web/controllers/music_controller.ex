@@ -112,6 +112,14 @@ defmodule MusicPlaylistWeb.MusicController do
     render(conn, "all.json", musics: musics)
   end
 
+  def list_playlist(%{assigns: %{role: :admin}} = conn, %{"client_id" => client_id}) do
+    musics = client_id
+      |> Playlist.Repository.list_playlist_by_client()
+      |> Enum.map(fn playlist -> Repository.get_music!(playlist.music_id) end)
+
+    render(conn, "all.json", musics: musics)
+  end
+
   def list_playlist(conn, _params) do
     conn
     |> resp(401, "")

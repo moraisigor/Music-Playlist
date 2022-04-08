@@ -9,7 +9,7 @@ defmodule MusicPlaylistWeb.ClientController do
 
   @clients_per_age 10
 
-  def index(conn, %{"page" => page}) do
+  def index(%{assigns: %{role: :admin}} = conn, %{"page" => page}) do
     clients = page
       |> Integer.parse()
       |> elem(0)
@@ -28,12 +28,19 @@ defmodule MusicPlaylistWeb.ClientController do
     render(conn, "index.json", %{clients: clients, max_pages: maxPages})
   end
 
-  def index(conn, _params) do
+  def index(%{assigns: %{role: :admin}} = conn, _params) do
     clients = Repository.list_all_clients()
     render(conn, "index.json", clients: clients)
   end
 
-  def create(conn, %{"client" => client_params}) do
+  def index(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
+
+  def create(%{assigns: %{role: :admin}} = conn, %{"client" => client_params}) do
     with {:ok, %Client{} = client} <- Repository.create_client(client_params) do
       conn
       |> put_status(:created)
@@ -42,12 +49,19 @@ defmodule MusicPlaylistWeb.ClientController do
     end
   end
 
+  def create(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
+
   def show(conn, %{"id" => id}) do
     client = Repository.get_client!(id)
     render(conn, "show.json", client: client)
   end
 
-  def update(conn, %{"id" => id, "client" => client_params}) do
+  def update(%{assigns: %{role: :admin}} = conn, %{"id" => id, "client" => client_params}) do
     client = Repository.get_client!(id)
 
     with {:ok, %Client{} = client} <- Repository.update_client(client, client_params) do
@@ -55,12 +69,34 @@ defmodule MusicPlaylistWeb.ClientController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def update(%{assigns: %{role: :client, current_id: client_id}} = conn, %{"client" => client_params}) do
+    client = Repository.get_client!(client_id)
+
+    with {:ok, %Client{} = client} <- Repository.update_client(client, client_params) do
+      render(conn, "show.json", client: client)
+    end
+  end
+
+  def update(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
+
+  def delete(%{assigns: %{role: :admin}} = conn, %{"id" => id}) do
     client = Repository.get_client!(id)
 
     with {:ok, %Client{}} <- Repository.delete_client(client) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def delete(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
   end
 
   def login(conn, %{"email" => email, "password" => password}) do
