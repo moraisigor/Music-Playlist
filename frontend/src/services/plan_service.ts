@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Environment from "../app/environment";
 import PlanModel from "../models/plan";
 
@@ -25,7 +25,13 @@ export async function listPlans(page: number) {
         }
     })
         .then((resp) => resp.data)
-        .catch((error) => new PlansResponse());
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return new PlansResponse();
+        });
 }
 
 export async function listPlansByMusic(musicId: string) {
@@ -36,7 +42,13 @@ export async function listPlansByMusic(musicId: string) {
         }
     })
         .then((resp) => resp.data)
-        .catch((error) => []);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return [];
+        });
 }
 
 export async function listAllPlans() {
@@ -56,11 +68,24 @@ export async function createPlan(name: string, musicLimit: number, parent: strin
         {headers: getAuth()}
     )
         .then((resp) => resp.data)
-        .catch((error) => null);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 
 export async function inactivatePlan(planId: string) {
-    await axios.delete(`${Environment.httpURL}/plans/${planId}`, {headers: getAuth()});
+    await axios.delete(`${Environment.httpURL}/plans/${planId}`, {headers: getAuth()})
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 
 export async function updatePlan(id: string, plan: Object, parentId: string) {
@@ -71,7 +96,13 @@ export async function updatePlan(id: string, plan: Object, parentId: string) {
         {headers: getAuth()}
     )
         .then((resp) => resp.data)
-        .catch((error) => null);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 
 export async function updateActivePlan(id: string, parentId: string) {
@@ -82,6 +113,12 @@ export async function updateActivePlan(id: string, parentId: string) {
         {headers: getAuth()}
     )
         .then((resp) => resp.data)
-        .catch((error) => null);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 

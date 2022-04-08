@@ -22,6 +22,10 @@ function AdminMusicsListPage() {
     const navigate = useNavigate();
     
     useEffect(() => {
+        if (!sessionStorage.getItem('token')) {
+            navigate("/admin");
+        }
+
         if (!loading && pageChanged) {
             loadMusics();
         }

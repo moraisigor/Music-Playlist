@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Environment from "../app/environment";
 import ClientModel from "../models/client";
 
@@ -20,7 +20,13 @@ function getAuth() {
 export async function listAllClients() {
     return await axios.get<ClientModel[]>(`${Environment.httpURL}/clients`, {headers: getAuth()})
         .then((resp) => resp.data)
-        .catch((error) => []);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+    
+            return [];
+        });
 }
 
 
@@ -32,7 +38,13 @@ export async function listClients(page: number) {
         }
     })
     .then((resp) => resp.data)
-    .catch((error) => new ClientsResponse());
+    .catch((error: AxiosError) => {
+        if (error.response?.status === 401) {
+            sessionStorage.removeItem('token');
+        }
+
+        return new ClientsResponse();
+    });
 }
 
 export async function createClient(email: string, password: string, planId: string) {
@@ -46,7 +58,13 @@ export async function createClient(email: string, password: string, planId: stri
         {headers: getAuth()}
     )
         .then((resp) => resp.data)
-        .catch((error) => null);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 
 export async function updateClient(id: string, music: Object, plan: string) {
@@ -57,9 +75,22 @@ export async function updateClient(id: string, music: Object, plan: string) {
         {headers: getAuth()}
     )
         .then((resp) => resp.data)
-        .catch((error) => null);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 
 export async function inactivateClient(planId: string) {
-    await axios.delete(`${Environment.httpURL}/clients/${planId}`, {headers: getAuth()});
+    await axios.delete(`${Environment.httpURL}/clients/${planId}`, {headers: getAuth()})
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }

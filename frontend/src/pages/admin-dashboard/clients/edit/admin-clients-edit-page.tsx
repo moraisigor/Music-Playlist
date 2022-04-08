@@ -27,6 +27,10 @@ function AdminClientsEditPage(props: EditClientProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!sessionStorage.getItem('token')) {
+            navigate("/admin");
+        }
+
         if (!props.isNew) {
             setOriginal(location.state as ClientModel);
             setEmail(original ? original.email : "");

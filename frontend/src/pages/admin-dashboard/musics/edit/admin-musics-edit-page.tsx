@@ -27,6 +27,10 @@ function AdminMusicsEditPage(props: EditMusicProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!sessionStorage.getItem('token')) {
+            navigate("/admin");
+        }
+        
         if (!props.isNew) {
             setOriginal(location.state as MusicModel);
             setName(original ? original.name : "");
@@ -36,9 +40,6 @@ function AdminMusicsEditPage(props: EditMusicProps) {
             loadAllPlans();
             loadAvailablePlans();
         }
-
-
-
     }, [original, changeMusicPlan]);
 
     async function save() {

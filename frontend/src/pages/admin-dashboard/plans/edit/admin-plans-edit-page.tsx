@@ -24,6 +24,10 @@ function AdminPlansEditPage(props: EditPlanProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!sessionStorage.getItem('token')) {
+            navigate("/admin");
+        }
+
         if (!props.isNew) {
             setOriginal(location.state as PlanModel);
             setName(original ? original.name : "");

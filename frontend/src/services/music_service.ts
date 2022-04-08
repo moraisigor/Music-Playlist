@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import Environment from "../app/environment";
 import MusicModel from "../models/music";
 import PlanModel from "../models/plan";
@@ -21,7 +21,13 @@ function getAuth() {
 export async function listAllMusics() {
     return await axios.get<MusicModel[]>(`${Environment.httpURL}/musics`, { headers: getAuth() })
         .then((resp) => resp.data)
-        .catch((error) => []);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return [];
+        });
 }
 
 
@@ -33,7 +39,13 @@ export async function listMusics(page: number) {
         }
     })
     .then((resp) => resp.data)
-    .catch((error) => new MusicsResponse());
+    .catch((error: AxiosError) => {
+        if (error.response?.status === 401) {
+            sessionStorage.removeItem('token');
+        }
+
+        return new MusicsResponse();
+    });
 }
 
 export async function createMusic(name: string, planId: string) {
@@ -46,7 +58,13 @@ export async function createMusic(name: string, planId: string) {
         { headers: getAuth() }
     )
         .then((resp) => resp.data)
-        .catch((error) => null);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 
 export async function updateMusic(id: string, music: Object, plan: string) {
@@ -57,9 +75,22 @@ export async function updateMusic(id: string, music: Object, plan: string) {
         { headers: getAuth() }
     )
         .then((resp) => resp.data)
-        .catch((error) => null);
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
 
 export async function inactivateMusic(planId: string) {
-    await axios.delete(`${Environment.httpURL}/musics/${planId}`, {headers: getAuth()});
+    await axios.delete(`${Environment.httpURL}/musics/${planId}`, {headers: getAuth()})
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return null;
+        });
 }
