@@ -62,7 +62,9 @@ function ClientsHomePage() {
         setOnInit(false);
     }
 
-    function exploreMusics() {}
+    function goExploreMusics() {
+        navigate("/explore", {state: musics.map((music: MusicModel) => music.id)});
+    }
 
     return (
         <div className="clientPlaylists">
@@ -73,7 +75,7 @@ function ClientsHomePage() {
                         <div className="clientPlaylistsTitle">
                             <h1>Your musics</h1>
                             <h3
-                                onClick={exploreMusics}
+                                onClick={goExploreMusics}
                                 style={{cursor: 'pointer'}}
                             >Explore</h3>
                         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ActivateIconButton from "../../../components/button/activate/activate-icon-button";
 import DeleteIconButton from "../../../components/button/delete/delete-icon-button";
 import EditIconButton from "../../../components/button/edit/edit-icon-button";
@@ -8,24 +8,36 @@ import CircularLoader from "../../../components/loader/circular_loader";
 import Pagination from "../../../components/pagination/pagination";
 import MusicModel from "../../../models/music";
 import { inactivateMusic, listMusics } from "../../../services/music_service";
+import { insertMusic, removeMusic } from "../../../services/playlist_service";
 import './explore.css'
 
 function ClientExploreMusicPage() {
+    const location = useLocation();
+    const [fetch, setFetch] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageChanged, setPageChanged] = useState<boolean>(true);
     const [lastPage, setLastPage] = useState<number>(1);
     const [pageOptions, setPageOptions] = useState<number[]>([1]);
     const [nameFilter, setNameFilter] = useState<string>("");
-    const [planFilter, setPlanFilter] = useState<string>("");
+    const [playlist, setPlaylist] = useState<string[]>([]);
     const [musics, setMusics] = useState<MusicModel[]>([]);
     const navigate = useNavigate();
     
     useEffect(() => {
+        if (!sessionStorage.getItem('token')) {
+            navigate("/");
+        }
+
+        if (fetch) {
+            setPlaylist(location.state as string[]);
+            setFetch(false);
+        }
+
         if (!loading && pageChanged) {
             loadMusics();
         }
-    }, [loading, pageChanged]);
+    }, [fetch, loading, pageChanged]);
 
 
     function pageForward(): void {
@@ -61,22 +73,25 @@ function ClientExploreMusicPage() {
         setPageChanged(true);
     }
 
-    async function deleteMusic(music: MusicModel): Promise<void> {
-        await inactivateMusic(music.id);
+    async function removeFromPlaylist(music: MusicModel): Promise<void> {
+        const response = await removeMusic(music.id);
+
+        if (response.inserted) {
+            setPlaylist(playlist.filter(id => id !== music.id));
+        }
+
         setPageChanged(true);
     }
 
-    async function activateMusic(plan: MusicModel): Promise<void> {
-        //await updateActiveMusic(plan.id, plan.parentId);
+    async function addToPlaylist(music: MusicModel): Promise<void> {
+        const response = await insertMusic(music.id);
+
+        if (response.inserted) {
+            playlist.push(music.id);
+            setPlaylist(playlist);
+        }
+
         setPageChanged(true);
-    }
-
-    function updatePage(music: MusicModel): void {
-        navigate('edit', {replace: true, state: music});
-    }
-
-    function createPage(): void {
-        navigate('new', {replace: true});
     }
 
     function filterMusics(): MusicModel[] {
@@ -141,6 +156,22 @@ function ClientExploreMusicPage() {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <tr>
+                                                <td className="clientsActionColumn"></td>
+                                                <td
+                                                    style={{paddingLeft: '10px', paddingRight: '10px'}}
+                                                >
+                                                    <input
+                                                        style={{width: '100%', boxSizing: 'border-box', lineHeight:'22px'}}
+                                                        placeholder='Filter'
+                                                        onChange={e => {
+                                                            setNameFilter(e.target.value);
+                                                            filterMusics();
+                                                        }}
+                                                    />
+                                                </td>
+                                            </tr>
+
                                             {
 
                                                 filterMusics().length === 0
@@ -156,9 +187,9 @@ function ClientExploreMusicPage() {
                                                             <tr>
                                                                 <td className="musicsActionColumn">
                                                                     {
-                                                                        music.active
-                                                                            ? <DeleteIconButton size={40} onClick={() => deleteMusic(music)}/>
-                                                                            : <ActivateIconButton size={40} onClick={() => activateMusic(music)}/>
+                                                                        playlist.includes(music.id)
+                                                                            ? <DeleteIconButton size={40} onClick={() => removeFromPlaylist(music)}/>
+                                                                            : <ActivateIconButton size={40} onClick={() => addToPlaylist(music)}/>
                                                                     }
                                                                 </td>
                                                                 <td>{ music.name }</td>
