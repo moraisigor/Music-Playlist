@@ -27,6 +27,24 @@ export async function loadPlaylist() {
         });
 }
 
+export async function loadPlaylistOf(clientId: string) {
+    return await axios.get<MusicModel[]>(`${Environment.httpURL}/playlist`, {
+            headers: getAuth(),
+            params: {
+                "client_id": clientId
+            }
+        }
+    )
+        .then((resp) => resp.data)
+        .catch((error: AxiosError) => {
+            if (error.response?.status === 401) {
+                sessionStorage.removeItem('token');
+            }
+
+            return [];
+        });
+}
+
 export async function insertMusic(musicId: string) {
     return await axios.post<InsertResponse>(`${Environment.httpURL}/playlist`, {
             "music_id": musicId

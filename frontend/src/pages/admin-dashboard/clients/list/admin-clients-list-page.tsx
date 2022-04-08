@@ -76,11 +76,11 @@ function AdminClientsListPage() {
     }
 
     function updatePage(client: ClientModel): void {
-        navigate('edit', {replace: true, state: client});
+        navigate('edit', {state: client});
     }
 
     function createPage(): void {
-        navigate('new', {replace: true});
+        navigate('new');
     }
 
     function filterClients(): ClientModel[] {

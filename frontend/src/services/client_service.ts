@@ -67,9 +67,9 @@ export async function createClient(email: string, password: string, planId: stri
         });
 }
 
-export async function updateClient(id: string, music: Object, plan: string) {
+export async function updateClient(id: string, client: Object, plan: string) {
     return await axios.put<ClientModel>(`${Environment.httpURL}/clients/${id}`, {
-            "music": music,
+            "client": client,
             "plan": plan
         },
         {headers: getAuth()}

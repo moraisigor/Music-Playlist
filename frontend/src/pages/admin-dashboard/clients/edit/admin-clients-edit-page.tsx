@@ -4,9 +4,11 @@ import { AdminHeaderNav, AdminPageSelector } from "../../../../components/header
 import CircularLoader from "../../../../components/loader/circular_loader";
 import Pagination from "../../../../components/pagination/pagination";
 import ClientModel from "../../../../models/client";
+import MusicModel from "../../../../models/music";
 import PlanModel from "../../../../models/plan";
 import { createClient, updateClient } from "../../../../services/client_service";
 import { listAllPlans } from "../../../../services/plan_service";
+import { loadPlaylistOf } from "../../../../services/playlist_service";
 import './admin-clients-edit-page.css'
 
 interface EditClientProps {
@@ -16,13 +18,13 @@ interface EditClientProps {
 function AdminClientsEditPage(props: EditClientProps) {
     const location = useLocation();
     const [loading, setLoading] = useState<boolean>(false);
-    const [loadingClientPlans, setLoadingClientPlans] = useState<boolean>(false);
+    const [loadingPlaylist, setLoadingPlaylist] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [plan, setPlan] = useState<string>("");
     const [original, setOriginal] = useState<ClientModel>();
     const [plans, setPlans] = useState<PlanModel[]>([]);
-    const [clientPlans, setClientPlans] = useState<PlanModel[]>([]);
+    const [playlist, setPlaylist] = useState<MusicModel[]>([]);
     const [changeClientPlan, setChangeClientPlan] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -37,7 +39,7 @@ function AdminClientsEditPage(props: EditClientProps) {
         }
 
         if (!changeClientPlan) {
-            loadAvailablePlans();
+            loadPlaylist();
             loadAllPlans();
         }
 
@@ -111,21 +113,21 @@ function AdminClientsEditPage(props: EditClientProps) {
         setLoading(false);
     }
     
-    async function loadAvailablePlans() {
-        /* setLoadingClientPlans(true);
+    async function loadPlaylist() {
+        setLoadingPlaylist(true);
         
         if (props.isNew) {
-            setClientPlans([]);
+            setPlaylist([]);
         } else {
-            const response = await listPlansByClient(original ? original.id : "null");
+            const response = await loadPlaylistOf(original ? original.id : "");
 
             if (response.length > 0) {
-                setClientPlans(response);
+                setPlaylist(response);
             }
         }
         
-        setLoadingClientPlans(false);
-        setChangeClientPlan(true); */
+        setLoadingPlaylist(false);
+        setChangeClientPlan(true);
     }
 
     return (
@@ -193,7 +195,7 @@ function AdminClientsEditPage(props: EditClientProps) {
                                         </div>
                                     </div>
                                     {
-                                        loadingClientPlans
+                                        loadingPlaylist
                                             ? <CircularLoader />
                                             : <div className="clientsTable">
                                                 <table style={{width: '100%'}}>
@@ -205,18 +207,18 @@ function AdminClientsEditPage(props: EditClientProps) {
                                                     <tbody>
 
                                                     {
-                                                            clientPlans.length === 0
+                                                            playlist.length === 0
                                                                 ? (
                                                                     <tr>
                                                                         <td colSpan={5} style={{textAlign: 'start', paddingLeft: '10px'}}>
-                                                                            No results found
+                                                                            No musics added
                                                                         </td>
                                                                     </tr>
                                                                 )
-                                                                : clientPlans.map((plan: PlanModel) => {
+                                                                : playlist.map((music: MusicModel) => {
                                                                     return (
                                                                         <tr>
-                                                                            <td>{ plan.name }</td>
+                                                                            <td>{ music.name }</td>
                                                                         </tr>
                                                                     );
                                                                 })
