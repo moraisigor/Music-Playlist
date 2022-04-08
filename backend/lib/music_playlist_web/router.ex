@@ -3,20 +3,27 @@ defmodule MusicPlaylistWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug MusicPlaylistWeb.Plugs.AuthenticationClient
+    plug MusicPlaylistWeb.Plugs.AuthenticationAdmin
   end
 
   scope "/api", MusicPlaylistWeb do
-    pipe_through :api
+    pipe_through [:api, :authenticate_client, :authenticate_admin]
 
     resources "/admins", AdminController, except: [:new, :edit]
     resources "/plans", PlanController, except: [:new, :edit]
     resources "/musics", MusicController, except: [:new, :edit]
     resources "/clients", ClientController, except: [:new, :edit]
 
-    post "/login", ClientController, :login
-
     get "/playlist", MusicController, :list_playlist
     post "/playlist", MusicController, :insert_music
+  end
+
+  scope "/auth", MusicPlaylistWeb do
+    pipe_through :api
+
+    post "/client", ClientController, :login
+    post "/admin", AdminController, :login
   end
 
   # Enables LiveDashboard only for development

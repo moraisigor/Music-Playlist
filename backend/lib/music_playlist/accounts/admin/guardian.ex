@@ -1,10 +1,10 @@
-defmodule MusicPlaylist.Accounts.Guardian do
+defmodule MusicPlaylist.Accounts.Admin.Guardian do
   use Guardian, otp_app: :music_playlist
 
-  alias MusicPlaylist.Accounts.Clients.Client
+  alias MusicPlaylist.Accounts.Admin
 
   def subject_for_token(%{id: id}, _claims) do
-    subject = to_string(id)
+    subject = "admin@" <> to_string(id)
     {:ok, subject}
   end
 
@@ -12,9 +12,9 @@ defmodule MusicPlaylist.Accounts.Guardian do
     {:error, :subject_fail}
   end
 
-  def resource_from_claims(%{"sub" => id}) do
-    client = Client.Repository.get_client!(id)
-    {:ok,  client}
+  def resource_from_claims(%{"sub" => "admin" <> id}) do
+    admin = Admin.Repository.get_admin!(id)
+    {:ok,  admin}
   end
 
   def resource_from_claims(_claims) do

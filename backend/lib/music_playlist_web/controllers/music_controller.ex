@@ -1,5 +1,6 @@
 defmodule MusicPlaylistWeb.MusicController do
   use MusicPlaylistWeb, :controller
+  import Plug.Conn
 
   alias MusicPlaylist.Accounts.Clients.Client
   alias MusicPlaylist.Plans.{Plan, PlanHierarchy}
@@ -87,15 +88,22 @@ defmodule MusicPlaylistWeb.MusicController do
     end
   end
 
-  def list_playlist(conn, %{"id" => id}) do
-    musics = id
+  def list_playlist(%{assigns: %{role: :client, current_user: client_id}} = conn, _params) do
+    musics = client_id
       |> Playlist.Repository.list_playlist_by_client()
       |> Enum.map(fn playlist -> Repository.get_music!(playlist.music_id) end)
 
     render(conn, "all.json", musics: musics)
   end
 
-  def insert_music(conn, %{"music_id" => music_id, "client_id" => client_id}) do
+  def list_playlist(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
+
+  def insert_music(%{assigns: %{role: :client, current_user: client_id}}  = conn, %{"music_id" => music_id}) do
     musics_max = client_id
       |> Client.Repository.get_client!()
       |> Map.get(:plan_id)
@@ -116,4 +124,28 @@ defmodule MusicPlaylistWeb.MusicController do
       conn |> render("playlist.json", flag: false)
     end
   end
+
+  def insert_music(%{assigns: %{role: :admin}} = conn, %{"music_id" => music_id, "client_id" => client_id}) do
+    musics_max = client_id
+      |> Client.Repository.get_client!()
+      |> Map.get(:plan_id)
+      |> Plan.Repository.get_plan!()
+      |> Map.get(:music_limit)
+
+    if Playlist.Repository.count_musics(client_id) < musics_max do
+      case Playlist.Repository.create_playlist(%{music_id: music_id, client_id: client_id}) do
+        {:ok, _} ->
+          conn
+          |> put_status(:created)
+          |> render("playlist.json", flag: true)
+        _ ->
+          conn
+          |> render("playlist.json", flag: false)
+      end
+    else
+      conn |> render("playlist.json", flag: false)
+    end
+  end
+
+
 end

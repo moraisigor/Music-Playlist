@@ -40,4 +40,20 @@ defmodule MusicPlaylistWeb.AdminController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def login(conn, %{"email" => email, "password" => password}) do
+    admin = Repository.get_admin_by_email!(email)
+
+    case Argon2.verify_pass(password, admin.password_hash) do
+      true ->
+        case MusicPlaylist.Accounts.Admin.Guardian.encode_and_sign(admin) do
+          {:ok, token, claims} ->
+            render(conn, "auth.json", %{token: token, claims: claims})
+          _ ->
+            render(conn, "auth.json", %{token: "fail", claims: ""})
+        end
+      false ->
+        render(conn, "auth.json", %{token: "", claims: ""})
+    end
+  end
 end

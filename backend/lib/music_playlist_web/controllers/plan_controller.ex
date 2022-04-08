@@ -1,5 +1,6 @@
 defmodule MusicPlaylistWeb.PlanController do
   use MusicPlaylistWeb, :controller
+  import Plug.Conn
 
   alias MusicPlaylist.Musics.MusicPlan
   alias MusicPlaylist.Plans.{Plan, PlanHierarchy}
@@ -9,7 +10,7 @@ defmodule MusicPlaylistWeb.PlanController do
 
   @plans_per_age 10
 
-  def index(conn, %{"page" => page}) do
+  def index(%{assigns: %{role: :admin}} = conn, %{"page" => page}) do
     plans = page
       |> Integer.parse()
       |> elem(0)
@@ -36,12 +37,19 @@ defmodule MusicPlaylistWeb.PlanController do
     render(conn, "all.json", %{plans: plans})
   end
 
-  def index(conn, _params) do
+  def index(%{assigns: %{role: :admin}} = conn, _params) do
     plans = Repository.list_all_plans()
     render(conn, "all.json", %{plans: plans})
   end
 
-  def create(conn, %{"plan" => %{"parent_id" => ""} = plan_params}) do
+  def index(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
+
+  def create(%{assigns: %{role: :admin}} = conn, %{"plan" => %{"parent_id" => ""} = plan_params}) do
     with {:ok, %Plan{} = plan} <- Repository.create_plan(plan_params) do
       PlanHierarchy.Repository.create_plan_hierarchy(%{child_id: plan.id})
       conn
@@ -51,7 +59,7 @@ defmodule MusicPlaylistWeb.PlanController do
     end
   end
 
-  def create(conn, %{"plan" => %{"parent_id" => parent_id} = plan_params}) do
+  def create(%{assigns: %{role: :admin}} = conn, %{"plan" => %{"parent_id" => parent_id} = plan_params}) do
     with {:ok, %Plan{} = plan} <- Repository.create_plan(plan_params) do
       PlanHierarchy.Repository.create_plan_hierarchy(%{child_id: plan.id, parent_id: parent_id})
       conn
@@ -61,13 +69,19 @@ defmodule MusicPlaylistWeb.PlanController do
     end
   end
 
+  def create(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
+
   def show(conn, %{"id" => id}) do
     plan = Repository.get_plan!(id)
     render(conn, "show.json", plan: plan)
   end
 
-  def update(conn, %{"id" => id, "plan" => plan_params, "parent" => ""}) do
-    IO.inspect("NO PARENT")
+  def update(%{assigns: %{role: :admin}} = conn, %{"id" => id, "plan" => plan_params, "parent" => ""}) do
     plan = Repository.get_plan!(id)
 
     with {:ok, %Plan{} = plan} <- Repository.update_plan(plan, plan_params) do
@@ -77,7 +91,7 @@ defmodule MusicPlaylistWeb.PlanController do
     end
   end
 
-  def update(conn, %{"id" => id, "plan" => plan_params, "parent" => parent_id}) do
+  def update(%{assigns: %{role: :admin}} = conn, %{"id" => id, "plan" => plan_params, "parent" => parent_id}) do
     IO.inspect("PARENT")
     plan = Repository.get_plan!(id)
 
@@ -89,11 +103,25 @@ defmodule MusicPlaylistWeb.PlanController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def update(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
+
+  def delete(%{assigns: %{role: :admin}} = conn, %{"id" => id}) do
     plan = Repository.get_plan!(id)
 
     with {:ok, %Plan{}} <- Repository.update_plan(plan, %{active: false}) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  def delete(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
   end
 end

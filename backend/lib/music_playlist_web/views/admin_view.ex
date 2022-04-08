@@ -17,4 +17,11 @@ defmodule MusicPlaylistWeb.AdminView do
       password_hash: admin.password_hash
     }
   end
+
+  def render("auth.json", %{token: token, claims: claims}) do
+    %{
+      token: token,
+      claims: claims
+    }
+  end
 end

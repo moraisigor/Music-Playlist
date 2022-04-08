@@ -35,7 +35,24 @@ defmodule MusicPlaylist.Accounts.Admin.Repository do
       ** (Ecto.NoResultsError)
 
   """
-  def get_admin!(id), do: Repo.get!(Admin, id)
+  def get_admin!(id), do: Repo.get(Admin, id)
+
+
+  @doc """
+  Gets a single admin by email.
+
+  Raises `Ecto.NoResultsError` if the Admin does not exist.
+
+  ## Examples
+
+      iex> get_admin_by_email!("user@email.com")
+      %Admin{}
+
+      iex> get_admin_by_email!("non_user@email.com")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_admin_by_email!(email), do: Repo.get_by!(Admin, email: email)
 
   @doc """
   Creates a admin.

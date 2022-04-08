@@ -70,6 +70,22 @@ defmodule MusicPlaylist.Plans.Plan.Repository do
   def get_plan!(id), do: Repo.get!(Plan, id)
 
   @doc """
+  Gets a single plan by name.
+
+  Raises `Ecto.NoResultsError` if the Plan does not exist.
+
+  ## Examples
+
+      iex> get_plan!(123)
+      %Plan{}
+
+      iex> get_plan!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_plan_by_name(name), do: Repo.get_by(Plan, name: name)
+
+  @doc """
   Creates a plan.
 
   ## Examples

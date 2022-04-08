@@ -68,7 +68,7 @@ defmodule MusicPlaylistWeb.ClientController do
 
     case Argon2.verify_pass(password, client.password_hash) do
       true ->
-        case MusicPlaylist.Accounts.Guardian.encode_and_sign(client) do
+        case MusicPlaylist.Accounts.Clients.Guardian.encode_and_sign(client) do
           {:ok, token, claims} ->
             render(conn, "auth.json", %{token: token, claims: claims})
           _ ->

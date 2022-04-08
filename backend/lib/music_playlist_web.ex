@@ -48,6 +48,8 @@ defmodule MusicPlaylistWeb do
 
       import Plug.Conn
       import Phoenix.Controller
+      import MusicPlaylistWeb.Plugs.AuthenticationClient, only: [authenticate_client: 2]
+      import MusicPlaylistWeb.Plugs.AuthenticationAdmin, only: [authenticate_admin: 2]
     end
   end
 
