@@ -30,6 +30,40 @@ defmodule MusicPlaylist.Musics.MusicPlan.Repository do
       [%MusicPlan{}, ...]
 
   """
+  def list_music_plans_by_plan(page, musics_per_page, plan_id) do
+    offset = (page - 1) * musics_per_page
+
+    MusicPlan
+    |> where(plan_id: ^plan_id)
+    |> limit(^musics_per_page)
+    |> offset(^offset)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the number of musics.
+
+  ## Examples
+
+      iex> count_musics()
+      10
+
+  """
+  def count_musics_by_plan(plan_id) do
+    MusicPlan
+    |> where(plan_id: ^plan_id)
+    |> Repo.aggregate(:count, :id)
+  end
+
+  @doc """
+  Returns the list of music_plans.
+
+  ## Examples
+
+      iex> list_music_plans()
+      [%MusicPlan{}, ...]
+
+  """
   def list_music_plans_by_music(music_id) do
     MusicPlan
     |> where(music_id: ^music_id)

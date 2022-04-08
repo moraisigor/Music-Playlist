@@ -59,6 +59,22 @@ defmodule MusicPlaylist.Musics.Playlist.Repository do
   def get_playlist!(id), do: Repo.get!(Playlist, id)
 
   @doc """
+  Gets a single playlist by client and music.
+
+  Raises `Ecto.NoResultsError` if the Playlist does not exist.
+
+  ## Examples
+
+      iex> get_playlist_by('123', '456')
+      %Playlist{}
+
+      iex> get_playlist_by('456', '123')
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_playlist_by(client_id, music_id), do: Repo.get_by(Playlist, [client_id: client_id, music_id: music_id])
+
+  @doc """
   Creates a playlist.
 
   ## Examples

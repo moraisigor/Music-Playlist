@@ -11,6 +11,22 @@ defmodule MusicPlaylistWeb.MusicController do
 
   @musics_per_age 10
 
+  def index(%{assigns: %{role: :client, current_user: user_id}} = conn, %{"page" => page}) do
+    client = Client.Repository.get_client!(user_id)
+
+    musics = page
+      |> Integer.parse()
+      |> elem(0)
+      |> MusicPlan.Repository.list_music_plans_by_plan(@musics_per_age, client.plan_id)
+      |> Enum.map(fn music_plan -> Repository.get_music!(music_plan.music_id) end)
+
+    maxPages = (MusicPlan.Repository.count_musics_by_plan(client.plan_id) / @musics_per_age)
+      |> Float.ceil()
+      |> trunc()
+
+    render(conn, "index.json", %{musics: musics, max_pages: maxPages})
+  end
+
   def index(conn, %{"page" => page}) do
     musics = page
       |> Integer.parse()
@@ -103,15 +119,15 @@ defmodule MusicPlaylistWeb.MusicController do
     |> halt()
   end
 
-  def insert_music(%{assigns: %{role: :client, current_user: client_id}}  = conn, %{"music_id" => music_id}) do
-    musics_max = client_id
+  def insert_music(%{assigns: %{role: :client, current_user: user_id}} = conn, %{"music_id" => music_id}) do
+    musics_max = user_id
       |> Client.Repository.get_client!()
       |> Map.get(:plan_id)
       |> Plan.Repository.get_plan!()
       |> Map.get(:music_limit)
 
-    if Playlist.Repository.count_musics(client_id) < musics_max do
-      case Playlist.Repository.create_playlist(%{music_id: music_id, client_id: client_id}) do
+    if Playlist.Repository.count_musics(user_id) < musics_max do
+      case Playlist.Repository.create_playlist(%{music_id: music_id, client_id: user_id}) do
         {:ok, _} ->
           conn
           |> put_status(:created)
@@ -125,27 +141,33 @@ defmodule MusicPlaylistWeb.MusicController do
     end
   end
 
-  def insert_music(%{assigns: %{role: :admin}} = conn, %{"music_id" => music_id, "client_id" => client_id}) do
-    musics_max = client_id
-      |> Client.Repository.get_client!()
-      |> Map.get(:plan_id)
-      |> Plan.Repository.get_plan!()
-      |> Map.get(:music_limit)
+  def insert_music(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
 
-    if Playlist.Repository.count_musics(client_id) < musics_max do
-      case Playlist.Repository.create_playlist(%{music_id: music_id, client_id: client_id}) do
-        {:ok, _} ->
-          conn
-          |> put_status(:created)
-          |> render("playlist.json", flag: true)
-        _ ->
-          conn
-          |> render("playlist.json", flag: false)
-      end
-    else
-      conn |> render("playlist.json", flag: false)
+  def remove_music(%{assigns: %{role: :client, current_user: user_id}} = conn, %{"music_id" => music_id}) do
+    user_id
+    |> Playlist.Repository.get_playlist_by(music_id)
+    |> case do
+      nil ->
+        render(conn, "playlist.json", flag: false)
+      playlist ->
+        playlist
+        |> Playlist.Repository.delete_playlist()
+        |> case do
+          {:ok, _} -> render(conn, "playlist.json", flag: true)
+          _ -> render(conn, "playlist.json", flag: false)
+        end
     end
   end
 
-
+  def remove_music(conn, _params) do
+    conn
+    |> resp(401, "")
+    |> send_resp()
+    |> halt()
+  end
 end

@@ -8,14 +8,12 @@ defmodule MusicPlaylistWeb.Plugs.AuthenticationAdmin do
     |> get_token()
     |> verify_token()
     |> case do
-      {:ok, user_id, role} ->
+      {:ok, user_id} ->
         conn
         |> assign(:current_user, user_id)
-        |> assign(:role, role)
+        |> assign(:role, :admin)
       _unauthorized ->
         conn
-        |> assign(:current_user, nil)
-        |> assign(:role, nil)
     end
   end
 
@@ -43,12 +41,9 @@ defmodule MusicPlaylistWeb.Plugs.AuthenticationAdmin do
   defp verify_token(token) do
     case MusicPlaylist.Accounts.Admin.Guardian.decode_and_verify(token) do
       {:ok, %{"sub" => "admin@" <> id}} ->
-        {:ok, id, :admin}
-      {:ok, %{"sub" => "client@" <> _}} ->
-        {:error, :unauthorized, nil}
+        {:ok, id}
       _ ->
         {:error, :unauthorized, nil}
     end
   end
-
 end

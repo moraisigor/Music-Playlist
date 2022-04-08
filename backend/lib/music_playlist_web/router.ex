@@ -17,6 +17,7 @@ defmodule MusicPlaylistWeb.Router do
 
     get "/playlist", MusicController, :list_playlist
     post "/playlist", MusicController, :insert_music
+    delete "/playlist", MusicController, :remove_music
   end
 
   scope "/auth", MusicPlaylistWeb do
